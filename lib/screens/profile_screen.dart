@@ -45,33 +45,49 @@ class ProfileScreen extends StatelessWidget {
                 Text('Role: ${data['role']}', style: TextStyle(fontSize: 20)),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                  onPressed: () async {
+                    // Menampilkan notifikasi instan
+                    await NotificationService.showInstantNotification(
+                      title: "Tes Notifikasi Instan",
+                      body: "Ini adalah notifikasi instan untuk pengujian.",
                     );
                   },
-                  child: Text('Logout'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                  ),
+                  child: Text(
+                    "Show Instant Notification",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
+                SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
-                    final now = DateTime.now();
-                    final scheduledTime = now.add(Duration(seconds: 10)); // 10 detik dari sekarang
-
+                    // Menjadwalkan notifikasi dalam 10 detik
+                    final scheduledTime = DateTime.now().add(Duration(seconds: 10));
                     await NotificationService.scheduleNotification(
-                      id: 1, // ID notifikasi unik
-                      title: 'Tes Reminder', // Judul notifikasi
-                      body: 'Ini adalah notifikasi reminder.', // Isi notifikasi
-                      scheduledTime: scheduledTime, // Waktu notifikasi
+                      id: 0,
+                      title: "Tes Notifikasi Terjadwal",
+                      body: "Notifikasi $scheduledTime",
+                      scheduleTime: scheduledTime,
                     );
 
-                    debugPrint("Notifikasi dijadwalkan untuk: $scheduledTime");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Notifikasi dijadwalkan untuk $scheduledTime",
+                        ),
+                      ),
+                    );
                   },
-                  child: Text("Tes Reminder"), // Label tombol
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pink,
+                  ),
+                  child: Text(
+                    "Schedule Notification (10s)",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-
-
               ],
             ),
           );

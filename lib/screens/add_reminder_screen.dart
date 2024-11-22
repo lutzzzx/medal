@@ -33,35 +33,6 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
     setState(() {});
   }
 
-  void _scheduleNotifications(String medicineName) async {
-    await NotificationService.requestPermission();
-
-    for (int i = 0; i < _times.length; i++) {
-      final time = _times[i];
-      final now = DateTime.now();
-      final scheduledTime = DateTime(
-        now.year,
-        now.month,
-        now.day,
-        time.hour,
-        time.minute,
-      );
-
-      // Pastikan waktu notifikasi ada di masa depan
-      if (scheduledTime.isAfter(now)) {
-        await NotificationService.scheduleNotification(
-          id: scheduledTime.hashCode,
-          title: 'Waktunya Minum Obat!',
-          body: 'Jangan lupa minum obat $medicineName.',
-          scheduledTime: scheduledTime,
-        );
-        debugPrint("Scheduled notification for $medicineName at $scheduledTime");
-      } else {
-        debugPrint(
-            "Skipped scheduling notification for $medicineName at $scheduledTime (past time)");
-      }
-    }
-  }
 
 
   void _addReminder() async {
@@ -75,27 +46,62 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
         return;
       }
 
-      await FirebaseFirestore.instance.collection('reminders').add({
-        'userId': user.uid,
-        'medicineName': _medicineNameController.text,
-        'dailyConsumption': int.parse(_dailyConsumptionController.text),
-        'doses': _dosesController.text,
-        'medicineType': _medicineType,
-        'beforeMeal': _beforeMeal,
-        'supply': int.parse(_supplyController.text),
-        'notes': _notesController.text,
-        'times': _times
-            .map((time) =>
-        '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}')
-            .toList(),
-      });
+      try {
+        // Tambahkan pengingat ke Firestore
+        final reminderDoc = await FirebaseFirestore.instance.collection('reminders').add({
+          'userId': user.uid,
+          'medicineName': _medicineNameController.text,
+          'dailyConsumption': int.parse(_dailyConsumptionController.text),
+          'doses': _dosesController.text,
+          'medicineType': _medicineType,
+          'beforeMeal': _beforeMeal,
+          'supply': int.parse(_supplyController.text),
+          'notes': _notesController.text,
+          'times': _times
+              .map((time) =>
+          '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}')
+              .toList(),
+        });
 
-      // Jadwalkan notifikasi
-      _scheduleNotifications(_medicineNameController.text);
+        // Jadwalkan notifikasi untuk setiap waktu
+        for (int i = 0; i < _times.length; i++) {
+          final time = _times[i];
+          final now = DateTime.now();
+          final scheduledTime = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            time.hour,
+            time.minute,
+          );
 
-      Navigator.pop(context);
+          final adjustedScheduledTime = scheduledTime.isBefore(now)
+              ? scheduledTime.add(Duration(days: 1))
+              : scheduledTime;
+
+          await NotificationService.scheduleNotification(
+            id: reminderDoc.id.hashCode + i, // ID unik untuk setiap waktu
+            title: "Saatnya Minum Obat ${_medicineNameController.text}",
+            body:
+            "Minum obat sebanyak ${_dosesController.text} ${_medicineType}. "
+                "${_beforeMeal ? "Diminum sebelum makan." : "Diminum setelah makan."}",
+            scheduleTime: adjustedScheduledTime,
+          );
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Pengingat berhasil ditambahkan')),
+        );
+        Navigator.pop(context);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Terjadi kesalahan: $e')),
+        );
+      }
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {

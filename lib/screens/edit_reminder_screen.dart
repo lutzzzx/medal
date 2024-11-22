@@ -68,36 +68,6 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
     }
   }
 
-  void _scheduleNotifications(String medicineName) {
-    for (int i = 0; i < _times.length; i++) {
-      final time = _times[i];
-      final now = DateTime.now();
-      final scheduledTime = DateTime(
-        now.year,
-        now.month,
-        now.day,
-        time.hour,
-        time.minute,
-      );
-
-      // Pastikan waktu notifikasi ada di masa depan
-      if (scheduledTime.isAfter(now)) {
-        NotificationService.scheduleNotification(
-          id: scheduledTime.hashCode,
-          title: 'Waktunya Minum Obat!',
-          body: 'Jangan lupa minum obat $medicineName.',
-          scheduledTime: scheduledTime,
-        );
-      }
-    }
-  }
-
-  void _cancelOldNotifications() {
-    for (final time in _times) {
-      NotificationService.cancelNotification(time.hashCode);
-    }
-  }
-
   void _updateReminder() async {
     if (_formKey.currentState!.validate()) {
       final newTimes = _times
@@ -105,33 +75,67 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
       '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}')
           .toList();
 
-      // Batalkan notifikasi lama
-      _cancelOldNotifications();
+      try {
+        // Perbarui data pengingat di Firestore
+        await FirebaseFirestore.instance
+            .collection('reminders')
+            .doc(widget.reminder.id)
+            .update({
+          'medicineName': _medicineNameController.text,
+          'dailyConsumption': int.parse(_dailyConsumptionController.text),
+          'doses': _dosesController.text,
+          'medicineType': _medicineType,
+          'beforeMeal': _beforeMeal,
+          'supply': int.parse(_supplyController.text),
+          'notes': _notesController.text,
+          'times': newTimes,
+        });
 
-      // Jadwalkan notifikasi baru
-      _scheduleNotifications(_medicineNameController.text);
+        // Batalkan semua notifikasi lama untuk pengingat ini
+        for (int i = 0; i < widget.reminder['times'].length; i++) {
+          await NotificationService.cancelNotification(widget.reminder.id.hashCode + i);
+        }
 
-      await FirebaseFirestore.instance
-          .collection('reminders')
-          .doc(widget.reminder.id)
-          .update({
-        'medicineName': _medicineNameController.text,
-        'dailyConsumption': int.parse(_dailyConsumptionController.text),
-        'doses': _dosesController.text,
-        'medicineType': _medicineType,
-        'beforeMeal': _beforeMeal,
-        'supply': int.parse(_supplyController.text),
-        'notes': _notesController.text,
-        'times': newTimes,
-      });
+        // Jadwalkan ulang notifikasi untuk waktu yang baru
+        for (int i = 0; i < _times.length; i++) {
+          final time = _times[i];
+          final now = DateTime.now();
+          final scheduledTime = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            time.hour,
+            time.minute,
+          );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Pengingat berhasil diperbarui!')),
-      );
+          final adjustedScheduledTime = scheduledTime.isBefore(now)
+              ? scheduledTime.add(Duration(days: 1))
+              : scheduledTime;
 
-      Navigator.pop(context);
+          await NotificationService.scheduleNotification(
+            id: widget.reminder.id.hashCode + i, // ID unik untuk setiap waktu
+            title: "Saatnya Minum Obat ${_medicineNameController.text}",
+            body:
+            "Minum obat sebanyak ${_dosesController.text} ${_medicineType}. "
+                "${_beforeMeal ? "Diminum sebelum makan." : "Diminum setelah makan."}",
+            scheduleTime: adjustedScheduledTime,
+          );
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Pengingat berhasil diperbarui')),
+        );
+
+        Navigator.pop(context);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Terjadi kesalahan: $e')),
+        );
+      }
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
