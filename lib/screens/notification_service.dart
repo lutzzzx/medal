@@ -14,7 +14,7 @@ class NotificationService {
 
     // Konfigurasi Android
     const AndroidInitializationSettings androidInitializationSettings =
-    AndroidInitializationSettings('@mipmap/ic_launcher'); // Ganti dengan ikon aplikasi Anda
+    AndroidInitializationSettings('@mipmap/ic_launcher'); // Ikon aplikasi
 
     const InitializationSettings initializationSettings =
     InitializationSettings(android: androidInitializationSettings);
@@ -28,7 +28,7 @@ class NotificationService {
     var status = await Permission.notification.status;
 
     if (status.isGranted) {
-      return; // Izin sudah diberikan
+      return;
     }
 
     // Kirim notifikasi untuk meminta izin
@@ -58,7 +58,7 @@ class NotificationService {
       if (status.isGranted) {
         await _notificationsPlugin.cancel(1); // Hapus notifikasi permintaan
         await showInstantNotification(
-          title: 'Terima Kasih!',
+          title: 'MedAl',
           body: 'Izin notifikasi berhasil diberikan.',
         );
       }
@@ -110,6 +110,7 @@ class NotificationService {
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:
       UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
     );
   }
 

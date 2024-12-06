@@ -1,8 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:medal/screens/reminder_list_screen.dart';
-import 'profile_screen.dart';
-import 'login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -10,82 +10,142 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+  final String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+  Timer? _timer;
+  DateTime _currentDate = DateTime.now();
+  bool _showCompleted = false; // Status untuk menampilkan obat yang sudah selesai
 
-  static List<Widget> _pages = <Widget>[
-    const Text('Home Page'),
-    ReminderListScreen(),
-    const Text('Page 3'),
-    const Text('Page 4'),
-    const Text('Page 5'),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(Duration(minutes: 1), (Timer t) => setState(() {}));
+    _resetStatusIfNewDay();
+  }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _resetStatusIfNewDay() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastReset = prefs.getString('lastResetDate') ?? '';
+    final today = "${_currentDate.year}-${_currentDate.month.toString().padLeft(2, '0')}-${_currentDate.day.toString().padLeft(2, '0')}";
+
+    if (lastReset != today) {
+      final reminders = await FirebaseFirestore.instance
+          .collection('reminders')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      for (var doc in reminders.docs) {
+        Map<String, dynamic> statusMap = Map<String, dynamic>.from(doc['status']);
+        statusMap.updateAll((key, value) => false);
+        await doc.reference.update({'status': statusMap, 'date': today});
+      }
+
+      await prefs.setString('lastResetDate', today);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Cek apakah pengguna sudah login
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) {
-      // Jika pengguna belum login, arahkan ke halaman login
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
-        );
-      });
-      return Scaffold(); // Tampilkan scaffold kosong sementara
-    }
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfileScreen()),
+        title: Text('Daftar Obat Harian'),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('reminders')
+            .where('userId', isEqualTo: userId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text('Tidak ada pengingat obat untuk hari ini.'));
+          }
+
+          final reminders = snapshot.data!.docs;
+          final now = DateTime.now();
+          final formattedTime = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
+
+          // Pisahkan daftar obat menjadi dua kategori
+          List<Widget> activeList = [];
+          List<Widget> completedList = [];
+
+          for (var reminder in reminders) {
+            final medicineName = reminder['medicineName'];
+            final doses = reminder['doses'];
+            final medicineType = reminder['medicineType'];
+            final times = List<String>.from(reminder['times']);
+            final statusMap = Map<String, bool>.from(reminder['status']);
+
+            for (var time in times) {
+              final isDue = time.compareTo(formattedTime) <= 0;
+              final isChecked = statusMap[time] ?? false;
+
+              // Jangan tampilkan obat yang belum waktunya
+              if (!isDue) continue;
+
+              final listItem = ListTile(
+                title: Text(
+                  medicineName,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: isDue && !isChecked ? Colors.red : Colors.black,
+                  ),
+                ),
+                subtitle: Text(
+                  "Waktu: $time - Dosis: $doses $medicineType",
+                  style: TextStyle(color: Colors.grey),
+                ),
+                trailing: Checkbox(
+                  value: isChecked,
+                  onChanged: (value) {
+                    FirebaseFirestore.instance
+                        .collection('reminders')
+                        .doc(reminder.id)
+                        .update({'status.$time': value});
+                  },
+                ),
               );
-            },
-          ),
-        ],
-      ),
-      body: Center(
-        child: _pages.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.alarm),
-            label: 'Reminder',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Schedule',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.note),
-            label: 'Notes',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
+
+              if (isChecked) {
+                completedList.add(listItem);
+              } else {
+                activeList.add(listItem);
+              }
+            }
+          }
+
+          return ListView(
+            children: [
+              // Daftar obat aktif
+              ...activeList,
+              Divider(),
+              // Bagian obat selesai diminum
+              ListTile(
+                title: Text(
+                  'Obat yang telah selesai diminum',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                trailing: IconButton(
+                  icon: Icon(_showCompleted ? Icons.expand_less : Icons.expand_more),
+                  onPressed: () {
+                    setState(() {
+                      _showCompleted = !_showCompleted;
+                    });
+                  },
+                ),
+              ),
+              if (_showCompleted) ...completedList,
+            ],
+          );
+        },
       ),
     );
   }

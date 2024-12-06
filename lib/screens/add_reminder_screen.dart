@@ -47,6 +47,16 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
       }
 
       try {
+        final today = DateTime.now();
+        final dateString = "${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}";
+
+        // Membuat status untuk setiap waktu minum obat
+        Map<String, bool> statusMap = {};
+        for (var time in _times) {
+          String formattedTime = "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+          statusMap[formattedTime] = false;
+        }
+
         // Tambahkan pengingat ke Firestore
         final reminderDoc = await FirebaseFirestore.instance.collection('reminders').add({
           'userId': user.uid,
@@ -61,6 +71,8 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
               .map((time) =>
           '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}')
               .toList(),
+          'status': statusMap,
+          'date': dateString,
         });
 
         // Jadwalkan notifikasi untuk setiap waktu
