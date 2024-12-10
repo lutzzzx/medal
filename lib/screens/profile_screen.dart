@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:medal/screens/notification_service.dart';
-import 'login_screen.dart';
+import 'package:medal/screens/reminder/notification_service.dart';
+import 'auth/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override

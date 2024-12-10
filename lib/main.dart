@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:medal/screens/main_screen.dart';
-import 'package:medal/screens/notification_service.dart';
+import 'package:medal/screens/reminder/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

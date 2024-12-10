@@ -13,7 +13,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
   Timer? _timer;
   DateTime _currentDate = DateTime.now();
-  bool _showCompleted = false; // Status untuk menampilkan obat yang sudah selesai
+  bool _showCompleted = false;
 
   @override
   void initState() {

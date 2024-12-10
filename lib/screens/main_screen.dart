@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medal/screens/home_screen.dart';
-import 'package:medal/screens/reminder_list_screen.dart';
+import 'package:medal/screens/reminder/reminder_list_screen.dart';
+import 'package:medal/screens/tenaga_kesehatan.dart';
 import 'profile_screen.dart';
-import 'login_screen.dart';
+import 'auth/login_screen.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _HomeScreenState extends State<MainScreen> {
     HomeScreen(),
     ReminderListScreen(),
     const Text('Page 3'),
-    const Text('Page 4'),
+    TenagaKesehatanMainPage(),
     const Text('Page 5'),
   ];
 

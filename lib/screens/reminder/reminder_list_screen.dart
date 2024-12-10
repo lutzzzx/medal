@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:medal/screens/add_reminder_screen.dart';
-import 'package:medal/screens/reminder_detail_screen.dart'; // Tambahkan import untuk halaman detail
+import 'package:medal/screens/reminder/add_reminder_screen.dart';
+import 'package:medal/screens/reminder/reminder_detail_screen.dart'; // Tambahkan import untuk halaman detail
 
 class ReminderListScreen extends StatelessWidget {
   @override
