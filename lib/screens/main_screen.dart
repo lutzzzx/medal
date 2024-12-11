@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:medal/screens/calculator/bmi_calculator.dart';
+import 'package:medal/screens/calculator/bmr_calculator.dart';
+import 'package:medal/screens/calculator/calculator_list.dart';
 import 'package:medal/screens/home_screen.dart';
 import 'package:medal/screens/reminder/reminder_list_screen.dart';
 import 'package:medal/screens/tenaga_kesehatan.dart';
@@ -19,7 +22,7 @@ class _HomeScreenState extends State<MainScreen> {
     ReminderListScreen(),
     const Text('Page 3'),
     TenagaKesehatanMainPage(),
-    const Text('Page 5'),
+    CalculatorListPage(),
   ];
 
   void _onItemTapped(int index) {

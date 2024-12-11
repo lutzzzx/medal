@@ -79,10 +79,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
           for (var reminder in reminders) {
             final medicineName = reminder['medicineName'];
-            final doses = reminder['doses'];
+            final doses = int.tryParse(reminder['doses']) ?? 0;
             final medicineType = reminder['medicineType'];
             final times = List<String>.from(reminder['times']);
             final statusMap = Map<String, bool>.from(reminder['status']);
+            final supply = reminder['supply'] ?? 0;
 
             for (var time in times) {
               final isDue = time.compareTo(formattedTime) <= 0;
@@ -105,11 +106,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 trailing: Checkbox(
                   value: isChecked,
-                  onChanged: (value) {
-                    FirebaseFirestore.instance
-                        .collection('reminders')
-                        .doc(reminder.id)
-                        .update({'status.$time': value});
+                  onChanged: (value) async {
+                    if (value != null) {
+                      final newSupply = value ? supply - doses : supply + doses;
+                      if (newSupply < 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Persediaan obat tidak mencukupi!')),
+                        );
+                        return;
+                      }
+
+                      await FirebaseFirestore.instance
+                          .collection('reminders')
+                          .doc(reminder.id)
+                          .update({
+                        'status.$time': value,
+                        'supply': newSupply,
+                      });
+                    }
                   },
                 ),
               );
