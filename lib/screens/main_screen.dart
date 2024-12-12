@@ -25,6 +25,14 @@ class _HomeScreenState extends State<MainScreen> {
     CalculatorListPage(),
   ];
 
+  static const List<String> _pageTitles = [
+    'MedAl',
+    'Pengingat Obat',
+    'Cari Obat',
+    'Daftar Kunjungan',
+    'Kalkulator Tubuh',
+  ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -49,7 +57,8 @@ class _HomeScreenState extends State<MainScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: Text(_pageTitles[_selectedIndex]),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(Icons.person),
@@ -66,30 +75,31 @@ class _HomeScreenState extends State<MainScreen> {
         child: _pages.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Beranda',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.alarm),
-            label: 'Reminder',
+            label: 'Pengingat',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Schedule',
+            icon: Icon(Icons.search),
+            label: 'Cari',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.note),
-            label: 'Notes',
+            icon: Icon(Icons.group),
+            label: 'Kunjungan',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: Icon(Icons.calculate),
+            label: 'Kalkulator',
           ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),
     );

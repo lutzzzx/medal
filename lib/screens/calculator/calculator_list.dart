@@ -8,9 +8,6 @@ class CalculatorListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Daftar Kalkulator'),
-      ),
       body: ListView(
         children: [
           ListTile(

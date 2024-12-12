@@ -7,9 +7,6 @@ class TenagaKesehatanMainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Tenaga Kesehatan & Jadwal Kunjungan'),
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
