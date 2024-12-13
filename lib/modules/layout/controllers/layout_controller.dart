@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:medal/modules/calculator/views/calculator_list_page.dart';
 import 'package:medal/modules/home/views/home_view.dart';
 import 'package:medal/modules/reminder/views/reminder_list_view.dart';
+import 'package:medal/modules/search/search.dart';
 import 'package:medal/modules/tenaga_kesehatan/views/tenaga_kesehatan_main_page.dart';
 
 class LayoutController extends GetxController {
@@ -11,7 +12,7 @@ class LayoutController extends GetxController {
   final List<Widget> pages = <Widget>[
     HomeView(),
     ReminderListView(),
-    const Text('Page 3'),
+    Search(),
     TenagaKesehatanMainPage(),
     CalculatorListPage(),
   ];
