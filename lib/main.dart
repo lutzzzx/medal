@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:medal/screens/main_screen.dart';
-import 'package:medal/screens/reminder/notification_service.dart';
+import 'package:medal/routes/app_routes.dart';
+import 'package:medal/services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,13 +17,14 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'MedAl',
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
-      home: MainScreen(),
+      initialRoute: AppRoutes.LAYOUT,
+      getPages: AppRoutes.routes,
     );
   }
 }
