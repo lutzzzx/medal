@@ -54,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Daftar Obat Hari Ini'),
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [

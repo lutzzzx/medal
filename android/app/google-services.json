@@ -12,7 +12,20 @@
           "package_name": "com.example.medal"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "397525276697-92v8eqlmrppb38tbocpv583turv0g0q3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.medal",
+            "certificate_hash": "85dc009da4574fed00a0676228fce294d42b8221"
+          }
+        },
+        {
+          "client_id": "397525276697-h4qtbqmbhda990p1rgaktdfjdvomqbim.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC95HiSxII79ro6dxCzIoXt_wjGMjsC9KY"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397525276697-h4qtbqmbhda990p1rgaktdfjdvomqbim.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
