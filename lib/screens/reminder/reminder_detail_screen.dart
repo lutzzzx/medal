@@ -40,7 +40,7 @@ class ReminderDetailScreen extends StatelessWidget {
             SizedBox(height: 10),
             Text('Konsumsi Per Hari: ${data['dailyConsumption']}'),
             Text('Dosis: ${data['doses']} ${data['medicineType']}'),
-            Text('Sebelum Makan: ${data['beforeMeal'] ? "Ya" : "Tidak"}'),
+            Text('Waktu Konsumsi: ${data['medicineUse']}'),
             Text('Persediaan Obat: ${data['supply']}'),
             Text('Keterangan: ${data['notes']}'),
             SizedBox(height: 10),

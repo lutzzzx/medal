@@ -61,7 +61,7 @@ class _HomeScreenState extends State<MainScreen> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.account_circle),
             onPressed: () {
               Navigator.push(
                 context,

@@ -19,7 +19,7 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
   late TextEditingController _supplyController;
   late TextEditingController _notesController;
   late String _medicineType;
-  late bool _beforeMeal;
+  late String _medicineUse;
   late List<TimeOfDay> _times;
 
   @override
@@ -29,11 +29,11 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
     _medicineNameController = TextEditingController(text: data['medicineName']);
     _dailyConsumptionController =
         TextEditingController(text: data['dailyConsumption'].toString());
-    _dosesController = TextEditingController(text: data['doses']);
+    _dosesController = TextEditingController(text: data['doses'].toString());
     _supplyController = TextEditingController(text: data['supply'].toString());
     _notesController = TextEditingController(text: data['notes']);
     _medicineType = data['medicineType'];
-    _beforeMeal = data['beforeMeal'];
+    _medicineUse = data['medicineUse'];
     _times = List<String>.from(data['times']).map((time) {
       final parts = time.split(':');
       return TimeOfDay(
@@ -83,9 +83,9 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
             .update({
           'medicineName': _medicineNameController.text,
           'dailyConsumption': int.parse(_dailyConsumptionController.text),
-          'doses': _dosesController.text,
+          'doses': int.parse(_dosesController.text),
           'medicineType': _medicineType,
-          'beforeMeal': _beforeMeal,
+          'medicineUse': _medicineUse,
           'supply': int.parse(_supplyController.text),
           'notes': _notesController.text,
           'times': newTimes,
@@ -116,8 +116,7 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
             id: widget.reminder.id.hashCode + i, // ID unik untuk setiap waktu
             title: "Saatnya Minum Obat ${_medicineNameController.text}",
             body:
-            "Minum obat sebanyak ${_dosesController.text} ${_medicineType}. "
-                "${_beforeMeal ? "Diminum sebelum makan." : "Diminum setelah makan."}",
+            "Minum obat sebanyak ${_dosesController.text} ${_medicineType}. $_medicineUse",
             scheduleTime: adjustedScheduledTime,
           );
         }
@@ -134,7 +133,6 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -171,8 +169,11 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
                 TextFormField(
                   controller: _dosesController,
                   decoration: InputDecoration(labelText: 'Dosis per Konsumsi'),
+                  keyboardType: TextInputType.number,
                   validator: (value) =>
-                  value == null || value.isEmpty ? 'Wajib diisi' : null,
+                  value == null || int.tryParse(value) == null
+                      ? 'Harus berupa angka'
+                      : null,
                 ),
                 DropdownButtonFormField<String>(
                   value: _medicineType,
@@ -189,14 +190,20 @@ class _EditReminderScreenState extends State<EditReminderScreen> {
                   },
                   decoration: InputDecoration(labelText: 'Jenis Obat'),
                 ),
-                SwitchListTile(
-                  title: Text('Dikonsumsi Sebelum Makan'),
-                  value: _beforeMeal,
+                DropdownButtonFormField<String>(
+                  value: _medicineUse,
+                  items: ['sebelum makan', 'sesudah makan', 'saat makan']
+                      .map((use) => DropdownMenuItem(
+                    value: use,
+                    child: Text(use),
+                  ))
+                      .toList(),
                   onChanged: (value) {
                     setState(() {
-                      _beforeMeal = value;
+                      _medicineUse = value!;
                     });
                   },
+                  decoration: InputDecoration(labelText: 'Waktu Konsumsi'),
                 ),
                 TextFormField(
                   controller: _supplyController,

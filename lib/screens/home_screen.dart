@@ -13,7 +13,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
   Timer? _timer;
   DateTime _currentDate = DateTime.now();
-  bool _showCompleted = false;
+  int _selectedTab = 0; // 0 for belum diminum, 1 for telah diminum
 
   @override
   void initState() {
@@ -53,113 +53,130 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daftar Obat Harian'),
+        title: Text('Daftar Obat Hari Ini'),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('reminders')
-            .where('userId', isEqualTo: userId)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('Tidak ada pengingat obat untuk hari ini.'));
-          }
-
-          final reminders = snapshot.data!.docs;
-          final now = DateTime.now();
-          final formattedTime = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
-
-          // Pisahkan daftar obat menjadi dua kategori
-          List<Widget> activeList = [];
-          List<Widget> completedList = [];
-
-          for (var reminder in reminders) {
-            final medicineName = reminder['medicineName'];
-            final doses = int.tryParse(reminder['doses']) ?? 0;
-            final medicineType = reminder['medicineType'];
-            final times = List<String>.from(reminder['times']);
-            final statusMap = Map<String, bool>.from(reminder['status']);
-            final supply = reminder['supply'] ?? 0;
-
-            for (var time in times) {
-              final isDue = time.compareTo(formattedTime) <= 0;
-              final isChecked = statusMap[time] ?? false;
-
-              // Jangan tampilkan obat yang belum waktunya
-              if (!isDue) continue;
-
-              final listItem = ListTile(
-                title: Text(
-                  medicineName,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: isDue && !isChecked ? Colors.red : Colors.black,
-                  ),
-                ),
-                subtitle: Text(
-                  "Waktu: $time - Dosis: $doses $medicineType",
-                  style: TextStyle(color: Colors.grey),
-                ),
-                trailing: Checkbox(
-                  value: isChecked,
-                  onChanged: (value) async {
-                    if (value != null) {
-                      final newSupply = value ? supply - doses : supply + doses;
-                      if (newSupply < 0) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Persediaan obat tidak mencukupi!')),
-                        );
-                        return;
-                      }
-
-                      await FirebaseFirestore.instance
-                          .collection('reminders')
-                          .doc(reminder.id)
-                          .update({
-                        'status.$time': value,
-                        'supply': newSupply,
-                      });
-                    }
-                  },
-                ),
-              );
-
-              if (isChecked) {
-                completedList.add(listItem);
-              } else {
-                activeList.add(listItem);
-              }
-            }
-          }
-
-          return ListView(
+      body: Column(
+        children: [
+          // Tombol untuk memilih daftar obat
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Daftar obat aktif
-              ...activeList,
-              Divider(),
-              // Bagian obat selesai diminum
-              ListTile(
-                title: Text(
-                  'Obat yang telah selesai diminum',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedTab = 0;
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _selectedTab == 0 ? Colors.blue : Colors.grey[200],
                 ),
-                trailing: IconButton(
-                  icon: Icon(_showCompleted ? Icons.expand_less : Icons.expand_more),
-                  onPressed: () {
-                    setState(() {
-                      _showCompleted = !_showCompleted;
-                    });
-                  },
-                ),
+                child: Text('Belum Diminum'),
               ),
-              if (_showCompleted) ...completedList,
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedTab = 1;
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _selectedTab == 1 ? Colors.blue : Colors.grey[200],
+                ),
+                child: Text('Telah Diminum'),
+              ),
             ],
-          );
-        },
+          ),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('reminders')
+                  .where('userId', isEqualTo: userId)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text('Tidak ada pengingat obat untuk hari ini.'));
+                }
+
+                final reminders = snapshot.data!.docs;
+                final now = DateTime.now();
+                final formattedTime = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
+
+                List<Widget> listToShow = [];
+
+                for (var reminder in reminders) {
+                  final medicineName = reminder['medicineName'];
+                  final doses = reminder['doses'];
+                  final medicineType = reminder['medicineType'];
+                  final medicineUse = reminder['medicineUse'];
+                  final times = List<String>.from(reminder['times']);
+                  final statusMap = Map<String, bool>.from(reminder['status']);
+                  final supply = reminder['supply'] ?? 0;
+
+                  for (var time in times) {
+                    final isDue = time.compareTo(formattedTime) <= 0;
+                    final isChecked = statusMap[time] ?? false;
+
+                    // Filter berdasarkan tab yang dipilih
+                    if (_selectedTab == 0 && (!isDue || isChecked)) continue;
+                    if (_selectedTab == 1 && (!isDue || !isChecked)) continue;
+
+                    final listItem = ListTile(
+                      title: Text(
+                        medicineName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: isDue && !isChecked ? Colors.red : Colors.black,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "Waktu: $time - Dosis: $doses $medicineType (${medicineUse})",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      trailing: Checkbox(
+                        value: isChecked,
+                        onChanged: (value) async {
+                          if (value != null) {
+                            final newSupply = value ? supply - doses : supply + doses;
+                            if (newSupply < 0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Persediaan obat tidak mencukupi!')),
+                              );
+                              return;
+                            }
+
+                            await FirebaseFirestore.instance
+                                .collection('reminders')
+                                .doc(reminder.id)
+                                .update({
+                              'status.$time': value,
+                              'supply': newSupply,
+                            });
+                          }
+                        },
+                      ),
+                    );
+
+                    listToShow.add(listItem);
+                  }
+                }
+
+                if (listToShow.isEmpty) {
+                  return Center(
+                    child: Text(_selectedTab == 0
+                        ? 'Tidak ada obat yang belum diminum.'
+                        : 'Tidak ada obat yang telah diminum.'),
+                  );
+                }
+
+                return ListView(children: listToShow);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

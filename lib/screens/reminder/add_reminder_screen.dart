@@ -18,7 +18,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
   final _supplyController = TextEditingController();
   final _notesController = TextEditingController();
   String _medicineType = 'Tablet';
-  bool _beforeMeal = true;
+  String _medicineUse = 'sebelum makan';
   List<TimeOfDay> _times = [];
 
   void _generateTimes() {
@@ -32,8 +32,6 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
     }
     setState(() {});
   }
-
-
 
   void _addReminder() async {
     if (_formKey.currentState!.validate()) {
@@ -62,9 +60,9 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
           'userId': user.uid,
           'medicineName': _medicineNameController.text,
           'dailyConsumption': int.parse(_dailyConsumptionController.text),
-          'doses': _dosesController.text,
+          'doses': int.parse(_dosesController.text),
           'medicineType': _medicineType,
-          'beforeMeal': _beforeMeal,
+          'medicineUse': _medicineUse,
           'supply': int.parse(_supplyController.text),
           'notes': _notesController.text,
           'times': _times
@@ -96,7 +94,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
             title: "Saatnya Minum Obat ${_medicineNameController.text}",
             body:
             "Minum obat sebanyak ${_dosesController.text} ${_medicineType}. "
-                "${_beforeMeal ? "Diminum sebelum makan." : "Diminum setelah makan."}",
+                "Diminum ${_medicineUse}.",
             scheduleTime: adjustedScheduledTime,
           );
         }
@@ -112,8 +110,6 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
       }
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -170,8 +166,11 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
                 TextFormField(
                   controller: _dosesController,
                   decoration: InputDecoration(labelText: 'Dosis per Konsumsi'),
+                  keyboardType: TextInputType.number,
                   validator: (value) =>
-                  value == null || value.isEmpty ? 'Wajib diisi' : null,
+                  value == null || int.tryParse(value) == null
+                      ? 'Harus berupa angka'
+                      : null,
                 ),
                 DropdownButtonFormField<String>(
                   value: _medicineType,
@@ -188,14 +187,20 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
                   },
                   decoration: InputDecoration(labelText: 'Jenis Obat'),
                 ),
-                SwitchListTile(
-                  title: Text('Dikonsumsi Sebelum Makan'),
-                  value: _beforeMeal,
+                DropdownButtonFormField<String>(
+                  value: _medicineUse,
+                  items: ['sebelum makan', 'sesudah makan', 'saat makan']
+                      .map((use) => DropdownMenuItem(
+                    value: use,
+                    child: Text(use),
+                  ))
+                      .toList(),
                   onChanged: (value) {
                     setState(() {
-                      _beforeMeal = value;
+                      _medicineUse = value!;
                     });
                   },
+                  decoration: InputDecoration(labelText: 'Waktu Konsumsi'),
                 ),
                 TextFormField(
                   controller: _supplyController,
