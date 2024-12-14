@@ -15,6 +15,7 @@ class DetailCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 16.0),
       padding: const EdgeInsets.all(14.0),
       decoration: BoxDecoration(
         color: Colors.lightBlue[100],
