@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medal/widgets/custom_text_form_field.dart';
+import 'package:medal/widgets/expanded_button.dart';
 import '../controllers/reminder_controller.dart';
 import '../../../data/models/reminder_model.dart';
 
@@ -22,7 +24,8 @@ class _AddReminderViewState extends State<AddReminderView> {
   final ReminderController controller = Get.find();
 
   void _generateTimes() {
-    final dailyConsumption = int.tryParse(_dailyConsumptionController.text) ?? 1;
+    final dailyConsumption =
+        int.tryParse(_dailyConsumptionController.text) ?? 1;
     final interval = 24 / dailyConsumption;
     _times.clear();
     for (int i = 0; i < dailyConsumption; i++) {
@@ -60,17 +63,28 @@ class _AddReminderViewState extends State<AddReminderView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                CustomTextFormField(
+                    icon: const Icon(
+                      Icons.medication_outlined,
+                      color: Colors.grey,
+                    ),
+                    controller: _medicineNameController,
+                    labelText: "Nama Obat"),
                 TextFormField(
                   controller: _medicineNameController,
                   decoration: InputDecoration(labelText: 'Nama Obat'),
-                  validator: (value) => value == null || value.isEmpty ? 'Wajib diisi' : null,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Wajib diisi' : null,
                 ),
                 TextFormField(
                   controller: _dailyConsumptionController,
                   decoration: InputDecoration(labelText: 'Konsumsi Per Hari'),
                   keyboardType: TextInputType.number,
                   onChanged: (_) => _generateTimes(),
-                  validator: (value) => value == null || int.tryParse(value) == null ? 'Harus berupa angka' : null,
+                  validator: (value) =>
+                      value == null || int.tryParse(value) == null
+                          ? 'Harus berupa angka'
+                          : null,
                 ),
                 ..._times.asMap().entries.map((entry) {
                   int index = entry.key;
@@ -100,15 +114,18 @@ class _AddReminderViewState extends State<AddReminderView> {
                   controller: _dosesController,
                   decoration: InputDecoration(labelText: 'Dosis per Konsumsi'),
                   keyboardType: TextInputType.number,
-                  validator: (value) => value == null || int.tryParse(value) == null ? 'Harus berupa angka' : null,
+                  validator: (value) =>
+                      value == null || int.tryParse(value) == null
+                          ? 'Harus berupa angka'
+                          : null,
                 ),
                 DropdownButtonFormField<String>(
                   value: _medicineType,
                   items: ['Tablet', 'Sirup', 'Kapsul', 'Salep']
                       .map((type) => DropdownMenuItem(
-                    value: type,
-                    child: Text(type),
-                  ))
+                            value: type,
+                            child: Text(type),
+                          ))
                       .toList(),
                   onChanged: (value) {
                     setState(() {
@@ -121,9 +138,9 @@ class _AddReminderViewState extends State<AddReminderView> {
                   value: _medicineUse,
                   items: ['sebelum makan', 'sesudah makan', 'saat makan']
                       .map((use) => DropdownMenuItem(
-                    value: use,
-                    child: Text(use),
-                  ))
+                            value: use,
+                            child: Text(use),
+                          ))
                       .toList(),
                   onChanged: (value) {
                     setState(() {
@@ -136,13 +153,17 @@ class _AddReminderViewState extends State<AddReminderView> {
                   controller: _supplyController,
                   decoration: InputDecoration(labelText: 'Persediaan Obat'),
                   keyboardType: TextInputType.number,
-                  validator: (value) => value == null || int.tryParse(value) == null ? 'Harus berupa angka' : null,
+                  validator: (value) =>
+                      value == null || int.tryParse(value) == null
+                          ? 'Harus berupa angka'
+                          : null,
                 ),
                 TextFormField(
                   controller: _notesController,
                   decoration: InputDecoration(labelText: 'Keterangan'),
                 ),
                 SizedBox(height: 20),
+                ExpandedButton(text1: "Tambah", press1: _addReminder),
                 ElevatedButton(
                   onPressed: _addReminder,
                   child: Text('Tambah Pengingat'),
