@@ -7,6 +7,7 @@ import '../../../data/repositories/jadwal_kunjungan_repository.dart';
 class TenagaKesehatanController extends GetxController {
   final TenagaKesehatanRepository _tenagaKesehatanRepo = TenagaKesehatanRepository();
   final JadwalKunjunganRepository _jadwalKunjunganRepo = JadwalKunjunganRepository();
+  final filteredTenagaKesehatanList = <TenagaKesehatan>[].obs;
 
   var tenagaKesehatanList = <TenagaKesehatan>[].obs;
   var jadwalKunjunganList = <JadwalKunjungan>[].obs;
@@ -55,5 +56,22 @@ class TenagaKesehatanController extends GetxController {
 
   Future<JadwalKunjungan> getJadwalKunjunganById(String id) async {
     return jadwalKunjunganList.firstWhere((j) => j.id == id);
+  }
+
+  Future<void> searchTenagaKesehatan(String query) async {
+    try {
+      if (query.isEmpty) {
+        filteredTenagaKesehatanList.clear();
+        return;
+      }
+
+      final results = tenagaKesehatanList
+          .where((tk) => tk.nama.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+
+      filteredTenagaKesehatanList.assignAll(results);
+    } catch (e) {
+      print('Error searching tenaga kesehatan: $e');
+    }
   }
 }

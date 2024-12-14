@@ -13,7 +13,6 @@ class EditJadwalKunjunganPage extends StatelessWidget {
   final _jamController = TextEditingController();
   final _keteranganController = TextEditingController();
   String? _selectedTenagaKesehatanId;
-  List<TenagaKesehatan> _tenagaKesehatanList = [];
 
   EditJadwalKunjunganPage({required this.jadwalKunjunganId});
 
@@ -24,7 +23,6 @@ class EditJadwalKunjunganPage extends StatelessWidget {
     _jamController.text = jadwalKunjungan.jam;
     _keteranganController.text = jadwalKunjungan.keterangan;
     _selectedTenagaKesehatanId = jadwalKunjungan.tenagaKesehatanId;
-    _tenagaKesehatanList = controller.tenagaKesehatanList;
   }
 
   void _editJadwal() {
@@ -33,7 +31,7 @@ class EditJadwalKunjunganPage extends StatelessWidget {
         id: jadwalKunjunganId,
         namaAhliKesehatan: _selectedTenagaKesehatanId == null
             ? _namaAhliKesehatanController.text
-            : _tenagaKesehatanList.firstWhere((tk) => tk.id == _selectedTenagaKesehatanId).nama,
+            : controller.tenagaKesehatanList.firstWhere((tk) => tk.id == _selectedTenagaKesehatanId).nama,
         tanggal: _tanggalController.text,
         jam: _jamController.text,
         keterangan: _keteranganController.text,
@@ -56,25 +54,37 @@ class EditJadwalKunjunganPage extends StatelessWidget {
           key: _formKey,
           child: Column(
             children: [
-              DropdownButtonFormField(
-                items: _tenagaKesehatanList
-                    .map((doc) => DropdownMenuItem(
-                  value: doc.id,
-                  child: Text(doc.nama),
-                ))
-                    .toList(),
-                value: _selectedTenagaKesehatanId,
-                onChanged: (value) {
-                  _selectedTenagaKesehatanId = value as String?;
+              TextFormField(
+                controller: _namaAhliKesehatanController,
+                decoration: InputDecoration(labelText: 'Nama Tenaga Kesehatan'),
+                onChanged: (value) async {
+                  if (value.isNotEmpty) {
+                    await controller.searchTenagaKesehatan(value);
+                  }
                 },
-                decoration: InputDecoration(labelText: 'Pilih Tenaga Kesehatan'),
+                validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
               ),
-              if (_selectedTenagaKesehatanId == null)
-                TextFormField(
-                  controller: _namaAhliKesehatanController,
-                  decoration: InputDecoration(labelText: 'Nama Ahli Kesehatan'),
-                  validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
-                ),
+              Obx(() {
+                if (controller.filteredTenagaKesehatanList.isNotEmpty) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: controller.filteredTenagaKesehatanList.length,
+                    itemBuilder: (context, index) {
+                      final tenagaKesehatan = controller.filteredTenagaKesehatanList[index];
+                      return ListTile(
+                        title: Text(tenagaKesehatan.nama),
+                        onTap: () {
+                          _namaAhliKesehatanController.text = tenagaKesehatan.nama;
+                          _selectedTenagaKesehatanId = tenagaKesehatan.id;
+                          controller.filteredTenagaKesehatanList.clear(); // Clear suggestions
+                        },
+                      );
+                    },
+                  );
+                } else {
+                  return SizedBox.shrink();
+                }
+              }),
               TextFormField(
                 controller: _tanggalController,
                 decoration: InputDecoration(labelText: 'Tanggal'),

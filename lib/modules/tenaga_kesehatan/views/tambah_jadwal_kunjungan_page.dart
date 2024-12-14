@@ -15,7 +15,7 @@ class TambahJadwalKunjunganPage extends StatelessWidget {
 
   void _tambahJadwal() {
     if (_formKey.currentState!.validate()) {
-      final userId = FirebaseAuth.instance.currentUser ?.uid;
+      final userId = FirebaseAuth.instance.currentUser?.uid;
       final jadwalKunjungan = JadwalKunjungan(
         id: '',
         namaAhliKesehatan: _selectedTenagaKesehatanId == null
@@ -42,24 +42,37 @@ class TambahJadwalKunjunganPage extends StatelessWidget {
           key: _formKey,
           child: Column(
             children: [
-              DropdownButtonFormField(
-                items: controller.tenagaKesehatanList
-                    .map((doc) => DropdownMenuItem(
-                  value: doc.id,
-                  child: Text(doc.nama),
-                ))
-                    .toList(),
-                onChanged: (value) {
-                  _selectedTenagaKesehatanId = value as String?;
+              TextFormField(
+                controller: _namaAhliKesehatanController,
+                decoration: InputDecoration(labelText: 'Nama Tenaga Kesehatan'),
+                onChanged: (value) async {
+                  if (value.isNotEmpty) {
+                    await controller.searchTenagaKesehatan(value);
+                  }
                 },
-                decoration: InputDecoration(labelText: 'Pilih Tenaga Kesehatan'),
+                validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
               ),
-              if (_selectedTenagaKesehatanId == null)
-                TextFormField(
-                  controller: _namaAhliKesehatanController,
-                  decoration: InputDecoration(labelText: 'Nama Ahli Kesehatan'),
-                  validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
-                ),
+              Obx(() {
+                if (controller.filteredTenagaKesehatanList.isNotEmpty) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: controller.filteredTenagaKesehatanList.length,
+                    itemBuilder: (context, index) {
+                      final tenagaKesehatan = controller.filteredTenagaKesehatanList[index];
+                      return ListTile(
+                        title: Text(tenagaKesehatan.nama),
+                        onTap: () {
+                          _namaAhliKesehatanController.text = tenagaKesehatan.nama;
+                          _selectedTenagaKesehatanId = tenagaKesehatan.id;
+                          controller.filteredTenagaKesehatanList.clear(); // Clear suggestions
+                        },
+                      );
+                    },
+                  );
+                } else {
+                  return SizedBox.shrink();
+                }
+              }),
               TextFormField(
                 controller: _tanggalController,
                 decoration: InputDecoration(labelText: 'Tanggal'),

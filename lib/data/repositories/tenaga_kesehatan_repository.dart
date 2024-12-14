@@ -34,6 +34,22 @@ class TenagaKesehatanRepository {
   }
 
   Future<void> deleteTenagaKesehatan(String id) async {
-    await _firestore.collection('tenaga_kesehatan').doc(id).delete();
+    final batch = _firestore.batch();
+
+    // Hapus tenaga kesehatan
+    final tenagaKesehatanDoc = _firestore.collection('tenaga_kesehatan').doc(id);
+    batch.delete(tenagaKesehatanDoc);
+
+    // Hapus jadwal kunjungan terkait
+    final jadwalKunjunganQuery = await _firestore
+        .collection('jadwal_kunjungan')
+        .where('tenagaKesehatanId', isEqualTo: id)
+        .get();
+
+    for (var doc in jadwalKunjunganQuery.docs) {
+      batch.delete(doc.reference);
+    }
+
+    await batch.commit();
   }
 }
