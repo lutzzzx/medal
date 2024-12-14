@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medal/modules/home/controllers/home_controller.dart';
+import 'package:medal/widgets/reminder_card.dart';
 
 class HomeView extends StatelessWidget {
   final HomeController controller = Get.put(HomeController());
@@ -79,27 +80,40 @@ class HomeView extends StatelessWidget {
                   if (controller.selectedTab.value == 1 &&
                       (!isDue || !isChecked)) continue;
 
-                  final listItem = ListTile(
-                    title: Text(
-                      reminder.medicineName,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: isDue && !isChecked ? Colors.red : Colors.black,
-                      ),
-                    ),
-                    subtitle: Text(
-                      "Waktu: $time - Dosis: ${reminder.doses} ${reminder.medicineType} (${reminder.medicineUse})",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    trailing: Checkbox(
-                      value: isChecked,
-                      onChanged: (value) {
-                        if (value != null) {
-                          controller.updateReminderStatus(reminder, time, value);
-                        }
-                      },
+                  // final listItem = ListTile(
+                  //   title: Text(
+                  //     reminder.medicineName,
+                  //     style: TextStyle(
+                  //       fontWeight: FontWeight.bold,
+                  //       color: isDue && !isChecked ? Colors.red : Colors.black,
+                  //     ),
+                  //   ),
+                  //   subtitle: Text(
+                  //     "Waktu: $time - Dosis: ${reminder.doses} ${reminder.medicineType} (${reminder.medicineUse})",
+                  //     style: TextStyle(color: Colors.grey),
+                  //   ),
+                  //   trailing: Checkbox(
+                  //     value: isChecked,
+                  //     onChanged: (value) {
+                  //       if (value != null) {
+                  //         controller.updateReminderStatus(reminder, time, value);
+                  //       }
+                  //     },
 
-                    ),
+                  //   ),
+                  // );
+
+                  final listItem = ReminderCard(
+                    medicineName: reminder.medicineName,
+                    time: time,
+                    medicineType: reminder.medicineType,
+                    isDue: isDue,
+                    isChecked: isChecked,
+                    onChanged: (value) {
+                      if (value != null) {
+                        controller.updateReminderStatus(reminder, time, value);
+                      }
+                    },
                   );
 
                   listToShow.add(listItem);
