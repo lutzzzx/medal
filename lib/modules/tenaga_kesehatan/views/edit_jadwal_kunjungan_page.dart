@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medal/data/models/tenaga_kesehatan_model.dart';
 import 'package:medal/widgets/custom_text_form_field.dart';
+import 'package:medal/widgets/expanded_button.dart';
 import '../controllers/tenaga_kesehatan_controller.dart';
 import '../../../data/models/jadwal_kunjungan_model.dart';
 
@@ -40,7 +41,7 @@ class EditJadwalKunjunganPage extends StatelessWidget {
         tenagaKesehatanId: _selectedTenagaKesehatanId,
       );
       controller.updateJadwalKunjungan(updatedJadwalKunjungan);
-      Get.back();
+      Get.close(2);
     }
   }
 
@@ -129,10 +130,7 @@ class EditJadwalKunjunganPage extends StatelessWidget {
                 labelText: 'Keterangan',
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _editJadwal,
-                child: Text('Simpan'),
-              ),
+              ExpandedButton(text1: 'Update', press1: _editJadwal)
             ],
           ),
 
