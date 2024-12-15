@@ -169,7 +169,7 @@ class ReminderController extends GetxController {
         SnackBar(content: Text('Pengingat berhasil diperbarui')),
       );
 
-      Get.close(2);
+      Get.close(1);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Terjadi kesalahan: $e')),

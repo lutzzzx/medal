@@ -18,44 +18,16 @@ class TenagaKesehatanMainPage extends StatelessWidget {
     controller.fetchJadwalKunjungan(userId);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Tenaga Kesehatan')),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Bagian Tenaga Kesehatan
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Daftar Tenaga Kesehatan', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            ),
-            Obx(() {
-              if (controller.tenagaKesehatanList.isEmpty) {
-                return Center(child: Text('Belum ada data tenaga kesehatan.'));
-              }
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: controller.tenagaKesehatanList.length,
-                itemBuilder: (context, index) {
-                  final data = controller.tenagaKesehatanList[index];
-                  return ListTile(
-                    title: Text(data.nama),
-                    subtitle: Text(data.noTelp),
-                    onTap: () {
-                      Get.to(() => DetailTenagaKesehatanPage(tenagaKesehatanId: data.id));
-                    },
-                  );
-                },
-              );
-            }),
-            Divider(),
             // Bagian Jadwal Kunjungan
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Daftar Jadwal Kunjungan', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            ),
+
             Obx(() {
               if (controller.jadwalKunjunganList.isEmpty) {
-                return Center(child: Text('Belum ada jadwal kunjungan.'));
+                return Center(
+                  child: Text('Belum ada jadwal kunjungan.'),
+                );
               }
               return ListView.builder(
                 shrinkWrap: true,
@@ -63,12 +35,154 @@ class TenagaKesehatanMainPage extends StatelessWidget {
                 itemCount: controller.jadwalKunjunganList.length,
                 itemBuilder: (context, index) {
                   final data = controller.jadwalKunjunganList[index];
-                  return ListTile(
-                    title: Text(data.namaAhliKesehatan),
-                    subtitle: Text('${data.tanggal} - ${data.jam}'),
+                  return GestureDetector(
                     onTap: () {
+                      // Navigasi ke halaman detail
                       Get.to(() => DetailJadwalKunjunganPage(jadwalKunjunganId: data.id));
                     },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 16), // Margin samping dan atas/bawah
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFCAF0F8),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.calendar_today, // Ikon kunjungan
+                              color: const Color(0xFF0077B6),
+                              size: 24,
+                            ),
+                          ),
+                          SizedBox(width: 12),
+                          // Informasi jadwal
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${data.tanggal} - ${data.jam}',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF0077B6),
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                data.namaAhliKesehatan,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            }),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 16.0), // Margin atas, bawah, kiri, kanan
+              child: Divider(
+                color: const Color(0xFFCAF0F8),
+                thickness: 2.0, // Ketebalan garis
+              ),
+            ),
+            // Bagian Tenaga Kesehatan
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Daftar Tenaga Kesehatan',
+                  style: TextStyle(fontSize: 22,),
+                ),
+              ),
+            ),
+
+            Obx(() {
+              if (controller.tenagaKesehatanList.isEmpty) {
+                return Center(
+                  child: Text('Belum ada data tenaga kesehatan.'),
+                );
+              }
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: controller.tenagaKesehatanList.length,
+                itemBuilder: (context, index) {
+                  final data = controller.tenagaKesehatanList[index];
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigasi ke halaman detail
+                      Get.to(() => DetailTenagaKesehatanPage(tenagaKesehatanId: data.id));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 16), // Margin samping dan atas/bawah
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFCAF0F8),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Bulatan dengan ikon
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.person,
+                              color: const Color(0xFF0077B6),
+                              size: 24,
+                            ),
+                          ),
+                          SizedBox(width: 12), // Spasi antar elemen
+                          // Informasi tenaga kesehatan
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                data.nama,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                '${data.noTelp} - ${data.alamat}',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF0077B6),
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 },
               );
@@ -79,32 +193,40 @@ class TenagaKesehatanMainPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
-          context: context,
-          builder: (context) => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(Icons.add),
-                title: Text('Tambah Tenaga Kesehatan'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Get.to(() => TambahTenagaKesehatanPage());
-                },
+            context: context,
+            builder: (context) => Container(
+              height: MediaQuery.of(context).size.height * 0.20, // Mengatur tinggi sheet
+              child: Center( // Memastikan elemen berada di tengah
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.add),
+                      title: Text('Tambah Tenaga Kesehatan'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Get.to(() => TambahTenagaKesehatanPage());
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    ListTile(
+                      leading: Icon(Icons.add),
+                      title: Text('Tambah Jadwal Kunjungan'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Get.to(() => TambahJadwalKunjunganPage());
+                      },
+                    ),
+                  ],
+                ),
               ),
-              ListTile(
-                leading: Icon(Icons.add),
-                title: Text('Tambah Jadwal Kunjungan'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Get.to(() => TambahJadwalKunjunganPage());
-                },
-              ),
-            ],
-          ),
+            ),
           );
         },
         child: Icon(Icons.add),
       ),
+
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/reminder_controller.dart';
 import 'add_reminder_view.dart';
-import 'reminder_detail_view.dart';
+import 'edit_reminder_view.dart';
 import 'package:medal/widgets/reminder_info_card.dart';
 
 class ReminderListView extends StatelessWidget {
@@ -56,7 +56,7 @@ class ReminderListView extends StatelessWidget {
               supply: reminder.supply,
               medicineType: reminder.medicineType,
               onTap: () {
-                Get.to(ReminderDetailView(reminder: reminder));
+                Get.to(EditReminderView(reminder: reminder));
               },
             );
           },

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medal/widgets/custom_text_form_field.dart';
+import 'package:medal/widgets/expanded_button.dart';
 import '../controllers/tenaga_kesehatan_controller.dart';
 import '../../../data/models/tenaga_kesehatan_model.dart';
 
@@ -33,7 +35,7 @@ class EditTenagaKesehatanPage extends StatelessWidget {
         userId: controller.tenagaKesehatanList.firstWhere((tk) => tk.id == tenagaKesehatanId).userId,
       );
       controller.updateTenagaKesehatan(updatedTenagaKesehatan);
-      Get.back();
+      Get.close(2);
     }
   }
 
@@ -48,35 +50,35 @@ class EditTenagaKesehatanPage extends StatelessWidget {
           key: _formKey,
           child: Column(
             children: [
-            TextFormField(
-            controller: _namaController,
-            decoration: InputDecoration(labelText: 'Nama'),
-            validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
+              CustomTextFormField(
+                icon: Icon(Icons.person),
+                controller: _namaController,
+                labelText: 'Nama',
+                validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
+              ),
+              CustomTextFormField(
+                icon: Icon(Icons.phone),
+                controller: _noTelpController,
+                labelText: 'No Telepon',
+                keyboardType: TextInputType.phone,
+              ),
+              CustomTextFormField(
+                icon: Icon(Icons.email),
+                controller: _emailController,
+                labelText: 'Email',
+                keyboardType: TextInputType.emailAddress,
+              ),
+              CustomTextFormField(
+                icon: Icon(Icons.home),
+                controller: _alamatController,
+                labelText: 'Alamat',
+              ),
+              SizedBox(height: 20),
+              ExpandedButton(text1: 'Update', press1: _updateData)
+            ],
           ),
-          TextFormField(
-            controller: _noTelpController,
-            decoration: InputDecoration(labelText: 'No Telepon'),
-            validator: (value) => value!.isEmpty ? 'No Telepon harus diisi' : null,
-          ),
-          TextFormField(
-            controller: _emailController,
-            decoration: InputDecoration(labelText: 'Email'),
-            validator: (value) => value!.isEmpty ? 'Email harus diisi' : null,
-          ),
-          TextFormField(
-              controller: _alamatController,
-              decoration: InputDecoration(labelText: 'Alamat'),
-              validator: (value) => value!.isEmpty ? 'Alamat harus diisi' : null,
         ),
-        SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: _updateData,
-          child: Text('Simpan'),
-        ),
-        ],
       ),
-    ),
-    ),
     );
   }
 }
