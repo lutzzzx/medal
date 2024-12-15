@@ -32,34 +32,27 @@ class BodyFatCalculatorPage extends StatelessWidget {
               ),
               SizedBox(height: 20.0),
 
-              // Input Berat Badan
               CustomTextFormField(
                 icon: Icon(Icons.monitor_weight),
                 controller: beratBadanController,
                 labelText: "Berat Badan (kg)",
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 10.0),
 
-              // Input Tinggi Badan
               CustomTextFormField(
                 icon: Icon(Icons.height),
                 controller: tinggiBadanController,
                 labelText: "Tinggi Badan (cm)",
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 10.0),
 
-              // Input Usia
               CustomTextFormField(
                 icon: Icon(Icons.person),
                 controller: usiaController,
                 labelText: "Usia (Tahun)",
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 10.0),
 
-              // Pilihan Jenis Kelamin
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
@@ -69,21 +62,22 @@ class BodyFatCalculatorPage extends StatelessWidget {
                   ),
                 ),
                 child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: controller.gender.value,
-                    items: [
-                      DropdownMenuItem(value: "Male", child: Text("Pria")),
-                      DropdownMenuItem(value: "Female", child: Text("Wanita")),
-                    ],
-                    onChanged: (value) {
-                      controller.gender.value = value!;
-                    },
-                    icon: Icon(Icons.arrow_drop_down),
-                    iconSize: 24,
-                    dropdownColor: Colors.white,
-                    alignment: Alignment.centerLeft,
-                  ),
+                  child: Obx(() => DropdownButton<String>(
+                        isExpanded: true,
+                        value: controller.gender.value,
+                        items: [
+                          DropdownMenuItem(value: "Male", child: Text("Pria")),
+                          DropdownMenuItem(
+                              value: "Female", child: Text("Wanita")),
+                        ],
+                        onChanged: (value) {
+                          controller.gender.value = value!;
+                        },
+                        icon: Icon(Icons.arrow_drop_down),
+                        iconSize: 24,
+                        dropdownColor: Colors.white,
+                        alignment: Alignment.centerLeft,
+                      )),
                 ),
               ),
               SizedBox(height: 20.0),

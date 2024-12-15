@@ -38,7 +38,6 @@ class BMRCalculatorPage extends StatelessWidget {
                 labelText: "Usia (Tahun)",
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 10.0),
 
               CustomTextFormField(
                 icon: Icon(Icons.height),
@@ -46,7 +45,6 @@ class BMRCalculatorPage extends StatelessWidget {
                 labelText: "Tinggi Badan (cm)",
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 10.0),
 
               CustomTextFormField(
                 icon: Icon(Icons.monitor_weight),
@@ -54,7 +52,6 @@ class BMRCalculatorPage extends StatelessWidget {
                 labelText: "Berat Badan (kg)",
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 10.0),
 
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16),
@@ -65,21 +62,22 @@ class BMRCalculatorPage extends StatelessWidget {
                   ),
                 ),
                 child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: controller.gender.value,
-                    items: [
-                      DropdownMenuItem(value: "Male", child: Text("Pria")),
-                      DropdownMenuItem(value: "Female", child: Text("Wanita")),
-                    ],
-                    onChanged: (value) {
-                      controller.gender.value = value!;
-                    },
-                    icon: Icon(Icons.arrow_drop_down),
-                    iconSize: 24,
-                    dropdownColor: Colors.white,
-                    alignment: Alignment.centerLeft,
-                  ),
+                  child: Obx(() => DropdownButton<String>(
+                        isExpanded: true,
+                        value: controller.gender.value,
+                        items: [
+                          DropdownMenuItem(value: "Male", child: Text("Pria")),
+                          DropdownMenuItem(
+                              value: "Female", child: Text("Wanita")),
+                        ],
+                        onChanged: (value) {
+                          controller.gender.value = value!;
+                        },
+                        icon: Icon(Icons.arrow_drop_down),
+                        iconSize: 24,
+                        dropdownColor: Colors.white,
+                        alignment: Alignment.centerLeft,
+                      )),
                 ),
               ),
               SizedBox(height: 20.0),

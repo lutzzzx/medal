@@ -30,25 +30,18 @@ class WhrCalculatorPage extends StatelessWidget {
                 textAlign: TextAlign.justify,
               ),
               SizedBox(height: 20.0),
-
-              // Input Lingkar Pinggang
               CustomTextFormField(
                 icon: Icon(Icons.straighten),
                 controller: waistController,
                 labelText: 'Lingkar Pinggang (cm)',
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 10.0),
-
-              // Input Lingkar Pinggul
               CustomTextFormField(
                 icon: Icon(Icons.straighten),
                 controller: hipController,
                 labelText: 'Lingkar Pinggul (cm)',
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 20.0),
-
               ExpandedButton(
                   text1: "Hitung WHR",
                   press1: () {
@@ -59,9 +52,6 @@ class WhrCalculatorPage extends StatelessWidget {
 
                     controller.calculateWHR();
                   }),
-              SizedBox(height: 20.0),
-
-              // Output Hasil WHR
               Obx(() {
                 return Text(
                   controller.whrMessage.value.isEmpty

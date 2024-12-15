@@ -28,43 +28,28 @@ class BMICalculatorPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20.0),
-
-            // Input untuk Tinggi Badan
             CustomTextFormField(
               icon: Icon(Icons.height),
               controller: heightController,
               labelText: "Tinggi Badan (cm)",
               keyboardType: TextInputType.number,
             ),
-
-            SizedBox(height: 10.0),
-
-            // Input untuk Berat Badan
             CustomTextFormField(
               icon: Icon(Icons.monitor_weight),
               controller: weightController,
               labelText: "Berat Badan (kg)",
               keyboardType: TextInputType.number,
             ),
-
-            SizedBox(height: 20.0),
-
             ExpandedButton(
                 text1: "Hitung BMI",
                 press1: () {
-                  // Ambil nilai dari controller dan update CalculatorController
                   controller.height.value =
                       double.tryParse(heightController.text) ?? 0.0;
                   controller.weight.value =
                       double.tryParse(weightController.text) ?? 0.0;
-
-                  // Panggil fungsi hitung BMI
                   controller.calculateBMI();
                 }),
-
             SizedBox(height: 20.0),
-
-            // Output Hasil BMI
             Obx(() {
               return Text(
                 controller.bmiMessage.value,
