@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medal/widgets/custom_text_form_field.dart';
 import 'package:medal/widgets/expanded_button.dart';
+import 'package:medal/widgets/hapus_ubah.dart';
 import '../controllers/tenaga_kesehatan_controller.dart';
 import '../../../data/models/tenaga_kesehatan_model.dart';
 
@@ -35,9 +37,10 @@ class EditTenagaKesehatanPage extends StatelessWidget {
         userId: controller.tenagaKesehatanList.firstWhere((tk) => tk.id == tenagaKesehatanId).userId,
       );
       controller.updateTenagaKesehatan(updatedTenagaKesehatan);
-      Get.close(2);
+      Get.back();
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -54,27 +57,40 @@ class EditTenagaKesehatanPage extends StatelessWidget {
                 icon: Icon(Icons.person),
                 controller: _namaController,
                 labelText: 'Nama',
+                isEdit: true,
                 validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
               ),
               CustomTextFormField(
                 icon: Icon(Icons.phone),
                 controller: _noTelpController,
                 labelText: 'No Telepon',
+                isEdit: true,
                 keyboardType: TextInputType.phone,
               ),
               CustomTextFormField(
                 icon: Icon(Icons.email),
                 controller: _emailController,
                 labelText: 'Email',
+                isEdit: true,
                 keyboardType: TextInputType.emailAddress,
               ),
               CustomTextFormField(
                 icon: Icon(Icons.home),
                 controller: _alamatController,
                 labelText: 'Alamat',
+                isEdit: true,
               ),
               SizedBox(height: 20),
-              ExpandedButton(text1: 'Update', press1: _updateData)
+              HapusUbah(
+                text1: 'Hapus',
+                text2: 'Update',
+                press1: () {
+                  controller.deleteTenagaKesehatan(tenagaKesehatanId, FirebaseAuth.instance.currentUser !.uid);
+                  Get.back();
+                  Get.snackbar('Sukses', 'Data berhasil dihapus');
+                },
+                press2: _updateData,
+              ),
             ],
           ),
         ),

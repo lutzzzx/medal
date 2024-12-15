@@ -9,6 +9,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool readOnly;
   final VoidCallback? onTap;
   final ValueChanged<String>? onChanged; // Tambahkan onChanged
+  final bool isEdit; // Tambahkan parameter isEdit
 
   const CustomTextFormField({
     super.key,
@@ -20,6 +21,7 @@ class CustomTextFormField extends StatefulWidget {
     this.readOnly = false,
     this.onTap,
     this.onChanged, // Parameter opsional
+    this.isEdit = false, // Parameter opsional dengan default false
   });
 
   @override
@@ -60,16 +62,18 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         decoration: InputDecoration(
           prefixIcon: Icon(
             widget.icon.icon,
-            color: _iconColor,
+            color: widget.isEdit ? const Color(0xFF0077B6) : _iconColor, // Ubah warna ikon
           ),
           labelText: widget.labelText,
+          filled: true, // Mengaktifkan pengisian latar belakang
+          fillColor: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.white, // Ubah warna latar belakang
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),
-            borderSide: const BorderSide(color: Colors.grey),
+            borderSide: BorderSide(color: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.grey),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),
-            borderSide: const BorderSide(color: Colors.grey),
+            borderSide: BorderSide(color: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.grey),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),

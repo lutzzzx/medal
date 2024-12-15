@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medal/data/models/tenaga_kesehatan_model.dart';
 import 'package:medal/widgets/custom_text_form_field.dart';
 import 'package:medal/widgets/expanded_button.dart';
+import 'package:medal/widgets/hapus_ubah.dart';
 import '../controllers/tenaga_kesehatan_controller.dart';
 import '../../../data/models/jadwal_kunjungan_model.dart';
+import 'detail_tenaga_kesehatan_page.dart'; // Import the detail page
 
 class EditJadwalKunjunganPage extends StatelessWidget {
   final String jadwalKunjunganId;
@@ -41,10 +44,11 @@ class EditJadwalKunjunganPage extends StatelessWidget {
         tenagaKesehatanId: _selectedTenagaKesehatanId,
       );
       controller.updateJadwalKunjungan(updatedJadwalKunjungan);
-      Get.close(2);
+      Get.back();
     }
   }
 
+  @override
   @override
   Widget build(BuildContext context) {
     _loadData();
@@ -56,16 +60,40 @@ class EditJadwalKunjunganPage extends StatelessWidget {
           key: _formKey,
           child: Column(
             children: [
-              CustomTextFormField(
-                icon: Icon(Icons.person), // Tambahkan ikon
-                controller: _namaAhliKesehatanController,
-                labelText: 'Nama Tenaga Kesehatan',
-                onChanged: (value) async {
-                  if (value.isNotEmpty) {
-                    await controller.searchTenagaKesehatan(value);
-                  }
-                },
-                validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomTextFormField(
+                      icon: Icon(Icons.person),
+                      controller: _namaAhliKesehatanController,
+                      labelText: 'Nama Tenaga Kesehatan',
+                      isEdit: true,
+                      readOnly: _selectedTenagaKesehatanId != null,
+                      onChanged: (value) async {
+                        if (value.isNotEmpty) {
+                          await controller.searchTenagaKesehatan(value);
+                        }
+                      },
+                      validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
+                    ),
+                  ),
+                  if (_selectedTenagaKesehatanId != null) // Show button only if a healthcare worker is selected
+                    IconButton(
+                      icon: Container(
+                        margin: EdgeInsets.only(bottom: 12.0), // Add some space between the text field and the button
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Color(0xFFCAF0F8),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.arrow_forward, color: const Color(0xFF03045E), size: 30.0),
+                      ),
+                      onPressed: () {
+                        Get.to(() => DetailTenagaKesehatanPage(tenagaKesehatanId: _selectedTenagaKesehatanId!));
+                      },
+                      tooltip: 'Lihat Detail Tenaga Kesehatan',
+                    ),
+                ],
               ),
               Obx(() {
                 if (controller.filteredTenagaKesehatanList.isNotEmpty) {
@@ -89,10 +117,11 @@ class EditJadwalKunjunganPage extends StatelessWidget {
                 }
               }),
               CustomTextFormField(
-                icon: Icon(Icons.calendar_today), // Tambahkan ikon kalender
+                icon: Icon(Icons.calendar_today),
                 controller: _tanggalController,
                 labelText: 'Tanggal',
                 readOnly: true,
+                isEdit: true,
                 onTap: () async {
                   DateTime? pickedDate = await showDatePicker(
                     context: context,
@@ -105,13 +134,14 @@ class EditJadwalKunjunganPage extends StatelessWidget {
                     "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
                   }
                 },
-                validator: (value) => value!.isEmpty ? 'Tangggal harus diisi' : null,
+                validator: (value) => value!.isEmpty ? 'Tanggal harus diisi' : null,
               ),
               CustomTextFormField(
-                icon: Icon(Icons.access_time), // Tambahkan ikon jam
+                icon: Icon(Icons.access_time),
                 controller: _jamController,
                 labelText: 'Jam',
                 readOnly: true,
+                isEdit: true,
                 onTap: () async {
                   TimeOfDay? pickedTime = await showTimePicker(
                     context: context,
@@ -125,15 +155,24 @@ class EditJadwalKunjunganPage extends StatelessWidget {
                 validator: (value) => value!.isEmpty ? 'Jam harus diisi' : null,
               ),
               CustomTextFormField(
-                icon: Icon(Icons.note), // Tambahkan ikon keterangan
+                icon: Icon(Icons.note),
                 controller: _keteranganController,
                 labelText: 'Keterangan',
+                isEdit: true,
               ),
               SizedBox(height: 20),
-              ExpandedButton(text1: 'Update', press1: _editJadwal)
+              HapusUbah(
+                text1 : 'Hapus',
+                text2: 'Update',
+                press1: () {
+                  controller.deleteJadwalKunjungan(jadwalKunjunganId, FirebaseAuth.instance.currentUser !.uid);
+                  Get.back();
+                  Get.snackbar('Sukses', 'Data berhasil dihapus');
+                },
+                press2: _editJadwal,
+              ),
             ],
           ),
-
         ),
       ),
     );

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medal/modules/tenaga_kesehatan/views/edit_jadwal_kunjungan_page.dart';
+import 'package:medal/modules/tenaga_kesehatan/views/edit_tenaga_kesehatan_page.dart';
 import '../controllers/tenaga_kesehatan_controller.dart';
 import 'tambah_tenaga_kesehatan_page.dart';
 import 'tambah_jadwal_kunjungan_page.dart';
@@ -38,7 +40,7 @@ class TenagaKesehatanMainPage extends StatelessWidget {
                   return GestureDetector(
                     onTap: () {
                       // Navigasi ke halaman detail
-                      Get.to(() => DetailJadwalKunjunganPage(jadwalKunjunganId: data.id));
+                      Get.to(() => EditJadwalKunjunganPage(jadwalKunjunganId: data.id));
                     },
                     child: Container(
                       margin: EdgeInsets.symmetric(vertical: 6, horizontal: 16), // Margin samping dan atas/bawah
@@ -129,7 +131,7 @@ class TenagaKesehatanMainPage extends StatelessWidget {
                   return GestureDetector(
                     onTap: () {
                       // Navigasi ke halaman detail
-                      Get.to(() => DetailTenagaKesehatanPage(tenagaKesehatanId: data.id));
+                      Get.to(() => EditTenagaKesehatanPage(tenagaKesehatanId: data.id));
                     },
                     child: Container(
                       margin: EdgeInsets.symmetric(vertical: 6, horizontal: 16), // Margin samping dan atas/bawah
