@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medal/widgets/custom_text_form_field.dart';
+import 'package:medal/widgets/expanded_button.dart';
 import '../controllers/reminder_controller.dart';
 import '../../../data/models/reminder_model.dart';
 import 'package:medal/widgets/reminder_form_field.dart';
@@ -23,7 +25,8 @@ class _AddReminderViewState extends State<AddReminderView> {
   final ReminderController controller = Get.find();
 
   void _generateTimes() {
-    final dailyConsumption = int.tryParse(_dailyConsumptionController.text) ?? 1;
+    final dailyConsumption =
+        int.tryParse(_dailyConsumptionController.text) ?? 1;
     final interval = 24 / dailyConsumption;
     _times.clear();
     for (int i = 0; i < dailyConsumption; i++) {
@@ -61,6 +64,7 @@ class _AddReminderViewState extends State<AddReminderView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
                 ReminderFormField(
                   controller: _medicineNameController, // Use your existing controller
                   icon: const Icon(Icons.radio_button_unchecked),  // Provide an appropriate icon
@@ -280,6 +284,7 @@ class _AddReminderViewState extends State<AddReminderView> {
                   labelHint: 'Persediaan Obat',
                   keyboardType: TextInputType.number,
                   validator: (value) =>
+
                       value == null || int.tryParse(value) == null ? 'Harus berupa angka' : null,
                 ),
 
@@ -318,6 +323,7 @@ class _AddReminderViewState extends State<AddReminderView> {
                   ),
                 ),
                 SizedBox(height: 20),
+                ExpandedButton(text1: "Tambah", press1: _addReminder),
                 ElevatedButton(
                   onPressed: _addReminder,
                   style: ElevatedButton.styleFrom(

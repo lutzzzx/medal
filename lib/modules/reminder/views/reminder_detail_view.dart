@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../controllers/reminder_controller.dart';
 import '../../../data/models/reminder_model.dart';
 import 'edit_reminder_view.dart';
+import 'package:medal/widgets/hapus_ubah.dart';
 
 class ReminderDetailView extends StatelessWidget {
   final ReminderModel reminder;
@@ -43,6 +44,16 @@ class ReminderDetailView extends StatelessWidget {
             SizedBox(height: 10),
             Text('Jam Minum: ${reminder.times.join(', ')}'),
             Spacer(),
+            HapusUbah(
+              text1: 'Hapus',
+              text2: 'Update',
+              press1: () {
+                _deleteReminder(context);
+              },
+              press2: () {
+                Get.to(EditReminderView(reminder: reminder));
+              },
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [

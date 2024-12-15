@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medal/widgets/calculator_list_container.dart';
 import '../controllers/calculator_controller.dart';
 
 class CalculatorListPage extends StatelessWidget {
@@ -8,34 +9,65 @@ class CalculatorListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
+      body: Column(
         children: [
-          ListTile(
-            title: Text('Kalkulator BMI'),
-            onTap: () {
+          SizedBox(
+            height: 20,
+          ),
+          CalculatorListContainer(
+            text1: "Body Mass Index (BMI)",
+            tap1: () {
               Get.toNamed('/bmi-calculator');
             },
           ),
-          ListTile(
-            title: Text('Kalkulator BMR'),
-            onTap: () {
+          CalculatorListContainer(
+            text1: "Basal Metabolic Rate (BMR)",
+            tap1: () {
               Get.toNamed('/bmr-calculator');
             },
           ),
-          ListTile(
-            title: Text('Kalkulator BF(%)'),
-            onTap: () {
+          CalculatorListContainer(
+            text1: "Body Fat Percentage (BF%)",
+            tap1: () {
               Get.toNamed('/body-fat-calculator');
             },
           ),
-          ListTile(
-            title: Text('Kalkulator WHR'),
-            onTap: () {
+          CalculatorListContainer(
+            text1: "Waist to Hip Ratio (WHR)",
+            tap1: () {
               Get.toNamed('/whr-calculator');
             },
           ),
         ],
       ),
+      // ListView(
+      //   children: [
+      //     ListTile(
+      //       title: Text('Kalkulator BMI'),
+      //       onTap: () {
+      //         Get.toNamed('/bmi-calculator');
+      //       },
+      //     ),
+      //     ListTile(
+      //       title: Text('Kalkulator BMR'),
+      //       onTap: () {
+      //         Get.toNamed('/bmr-calculator');
+      //       },
+      //     ),
+      //     ListTile(
+      //       title: Text('Kalkulator BF(%)'),
+      //       onTap: () {
+      //         Get.toNamed('/body-fat-calculator');
+      //       },
+      //     ),
+      //     ListTile(
+      //       title: Text('Kalkulator WHR'),
+      //       onTap: () {
+      //         Get.toNamed('/whr-calculator');
+      //       },
+      //     ),
+      //   ],
+      // ),
     );
   }
 }

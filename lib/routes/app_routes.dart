@@ -77,25 +77,13 @@ class AppRoutes {
       binding: TenagaKesehatanBinding(),
     ),
     GetPage(
-        name: CALCULATOR_LIST,
-        page: () => CalculatorListPage(),
-        binding: CalculatorBinding(),
+      name: CALCULATOR_LIST,
+      page: () => CalculatorListPage(),
+      binding: CalculatorBinding(),
     ),
-    GetPage(
-        name: BMR_CALCULATOR,
-        page: () => BMRCalculatorPage()
-    ),
-    GetPage(
-        name: BMI_CALCULATOR,
-        page: () => BMICalculatorPage()
-    ),
-    GetPage(
-        name: BODY_FAT_CALCULATOR,
-        page: () => BodyFatCalculatorPage()
-    ),
-    GetPage(
-        name: WHR_CALCULATOR,
-        page: () => WhrCalculatorPage()
-    ),
+    GetPage(name: BMR_CALCULATOR, page: () => BMRCalculatorPage()),
+    GetPage(name: BMI_CALCULATOR, page: () => BMICalculatorPage()),
+    GetPage(name: BODY_FAT_CALCULATOR, page: () => BodyFatCalculatorPage()),
+    GetPage(name: WHR_CALCULATOR, page: () => WhrCalculatorPage()),
   ];
 }

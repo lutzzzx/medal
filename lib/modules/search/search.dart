@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:medal/widgets/custom_text_form_field.dart';
+import 'package:medal/widgets/expanded_button.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -30,7 +32,7 @@ class _SearchState extends State<Search> {
         final data = json.decode(response.body);
         setState(() {
           _searchResults =
-          List<Map<String, dynamic>>.from(data['results'] ?? []);
+              List<Map<String, dynamic>>.from(data['results'] ?? []);
         });
       } else {
         setState(() {
@@ -56,16 +58,19 @@ class _SearchState extends State<Search> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _genericNameTextField(),
+            CustomTextFormField(
+                icon: Icon(Icons.search),
+                controller: _genericNameTextboxController,
+                labelText: "Nama Obat"),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
+            ExpandedButton(
+              text1: "Search",
+              press1: () {
                 final genericName = _genericNameTextboxController.text.trim();
                 if (genericName.isNotEmpty) {
                   _searchByGenericName(genericName);
                 }
               },
-              child: const Text('Search'),
             ),
             const SizedBox(height: 16),
             if (_isLoading) const CircularProgressIndicator(),
@@ -114,9 +119,11 @@ class _SearchState extends State<Search> {
           return Card(
             child: ListTile(
               title: Text(
-                  result['openfda']['generic_name']?.join('') ?? 'Unknown'),
+                  (result['openfda']['generic_name']?.join('') ?? 'Unknown')
+                      .replaceAll('.', '')
+                      .replaceAll(',', '')),
               subtitle:
-              Text(result['purpose']?.join(', ') ?? 'No purpose provided'),
+                  Text(result['purpose']?.join(', ') ?? 'No purpose provided'),
             ),
           );
         },

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medal/widgets/custom_text_form_field.dart';
+import 'package:medal/widgets/expanded_button.dart';
 import '../controllers/calculator_controller.dart';
 
 class BMICalculatorPage extends StatelessWidget {
   final CalculatorController controller = Get.find();
+
+  // Tambahkan TextEditingController untuk mengontrol input tinggi dan berat badan
+  final TextEditingController heightController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -22,23 +28,43 @@ class BMICalculatorPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20.0),
-            TextField(
+
+            // Input untuk Tinggi Badan
+            CustomTextFormField(
+              icon: Icon(Icons.height),
+              controller: heightController,
+              labelText: "Tinggi Badan (cm)",
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: "Tinggi Badan (cm)"),
-              onChanged: (value) => controller.height.value = double.tryParse(value) ?? 0.0,
             ),
+
             SizedBox(height: 10.0),
-            TextField(
+
+            // Input untuk Berat Badan
+            CustomTextFormField(
+              icon: Icon(Icons.monitor_weight),
+              controller: weightController,
+              labelText: "Berat Badan (kg)",
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: "Berat Badan (kg)"),
-              onChanged: (value) => controller.weight.value = double.tryParse(value) ?? 0.0,
             ),
+
             SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: controller.calculateBMI,
-              child: Text("Hitung BMI"),
-            ),
+
+            ExpandedButton(
+                text1: "Hitung BMI",
+                press1: () {
+                  // Ambil nilai dari controller dan update CalculatorController
+                  controller.height.value =
+                      double.tryParse(heightController.text) ?? 0.0;
+                  controller.weight.value =
+                      double.tryParse(weightController.text) ?? 0.0;
+
+                  // Panggil fungsi hitung BMI
+                  controller.calculateBMI();
+                }),
+
             SizedBox(height: 20.0),
+
+            // Output Hasil BMI
             Obx(() {
               return Text(
                 controller.bmiMessage.value,

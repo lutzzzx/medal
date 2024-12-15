@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class HapusUbah extends StatelessWidget {
-  final String text1; // Teks untuk tombol hapus
-  final String text2; // Teks untuk tombol ubah
-  final VoidCallback press1; // Fungsi untuk tombol hapus
-  final VoidCallback press2; // Fungsi untuk tombol ubah
+  final String text1;
+  final String text2;
+  final VoidCallback press1;
+  final VoidCallback press2;
 
   const HapusUbah({
     super.key,
@@ -13,63 +13,6 @@ class HapusUbah extends StatelessWidget {
     required this.press1,
     required this.press2,
   });
-
-  // Fungsi untuk menampilkan dialog konfirmasi hapus
-  void _showDeleteConfirmation(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Konfirmasi Hapus'),
-          content: const Text('Apakah Anda yakin ingin menghapus?'),
-          actions: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey,
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-              ),
-              child: const Text(
-                'Batal',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            // Tombol Hapus
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                press1();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-              ),
-              child: const Text(
-                'Hapus',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,21 +24,13 @@ class HapusUbah extends StatelessWidget {
         children: [
           Expanded(
             child: ElevatedButton(
-              onPressed: () => _showDeleteConfirmation(context),
+              onPressed: press1,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                padding: const EdgeInsets.symmetric(vertical: 14.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
+                backgroundColor: Colors.red, // Warna merah untuk tombol Hapus
               ),
               child: Text(
                 text1,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(color: Colors.white),
               ),
             ),
           ),
@@ -104,19 +39,11 @@ class HapusUbah extends StatelessWidget {
             child: ElevatedButton(
               onPressed: press2,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0077B6),
-                padding: const EdgeInsets.symmetric(vertical: 14.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
+                backgroundColor: Colors.blue, // Warna biru untuk tombol Update
               ),
               child: Text(
                 text2,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(color: Colors.white),
               ),
             ),
           ),
