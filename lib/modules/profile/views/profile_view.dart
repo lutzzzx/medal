@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medal/widgets/detail_card.dart';
+import 'package:medal/widgets/expanded_button.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -23,49 +25,33 @@ class ProfileView extends GetView<ProfileController> {
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (user.photoURL != null)
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: NetworkImage(user.photoURL!),
-              )
-            else
-              Icon(
-                Icons.account_circle,
-                size: 100,
-              ),
-            SizedBox(height: 20),
-            Text('Name: ${user.displayName ?? "-"}',
-                style: TextStyle(fontSize: 20)),
-            SizedBox(height: 10),
-            Text('Email: ${user.email}', style: TextStyle(fontSize: 20)),
-            SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: controller.showInstantNotification,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-              ),
-              child: Text(
-                "Show Instant Notification",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: controller.scheduleNotification,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pink,
-              ),
-              child: Text(
-                "Schedule Notification (10s)",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0), // Margin samping 20 pixel
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (user.photoURL != null)
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: NetworkImage(user.photoURL!),
+                )
+              else
+                Icon(
+                  Icons.account_circle,
+                  size: 100,
+                ),
+              SizedBox(height: 20),
+              DetailCard(text: 'Nama: ${user.displayName ?? "-"}', icon: Icons.person,),
+              DetailCard(text: 'Email: ${user.email ?? "-"}', icon: Icons.mail,),
+              SizedBox(height: 30),
+              ExpandedButton(text1: 'Tes Notifikasi Instan', press1: controller.showInstantNotification),
+              ExpandedButton(text1: 'Tes Notifikasi Terjadwal (10 det)', press1: controller.scheduleNotification),
+              SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
+
     );
   }
 }

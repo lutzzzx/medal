@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medal/widgets/custom_text_form_field.dart';
+import 'package:medal/widgets/expanded_button.dart';
 import '../controllers/tenaga_kesehatan_controller.dart';
 import '../../../data/models/tenaga_kesehatan_model.dart';
 
@@ -38,31 +40,31 @@ class TambahTenagaKesehatanPage extends StatelessWidget {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
+              CustomTextFormField(
+                icon: Icon(Icons.person),
                 controller: _namaController,
-                decoration: InputDecoration(labelText: 'Nama'),
+                labelText: 'Nama',
                 validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
               ),
-              TextFormField(
+              CustomTextFormField(
+                icon: Icon(Icons.phone),
                 controller: _noTelpController,
-                decoration: InputDecoration(labelText: 'No Telepon'),
-                validator: (value) => value!.isEmpty ? 'No Telepon harus diisi' : null,
+                labelText: 'No Telepon',
+                keyboardType: TextInputType.phone,
               ),
-              TextFormField(
+              CustomTextFormField(
+                icon: Icon(Icons.email),
                 controller: _emailController,
-                decoration: InputDecoration(labelText: 'Email'),
-                validator: (value) => value!.isEmpty ? 'Email harus diisi' : null,
+                labelText: 'Email',
+                keyboardType: TextInputType.emailAddress,
               ),
-              TextFormField(
+              CustomTextFormField(
+                icon: Icon(Icons.home),
                 controller: _alamatController,
-                decoration: InputDecoration(labelText: 'Alamat'),
-                validator: (value) => value!.isEmpty ? 'Alamat harus diisi' : null,
+                labelText: 'Alamat',
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _tambahData,
-                child: Text('Simpan'),
-              ),
+              ExpandedButton(text1: 'Simpan', press1: _tambahData)
             ],
           ),
         ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medal/modules/tenaga_kesehatan/views/edit_tenaga_kesehatan_page.dart';
+import 'package:medal/widgets/detail_card.dart';
+import 'package:medal/widgets/hapus_ubah.dart';
 import '../controllers/tenaga_kesehatan_controller.dart';
 import '../../../data/models/tenaga_kesehatan_model.dart';
 
@@ -29,48 +31,34 @@ class DetailTenagaKesehatanPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Nama: ${data.nama}', style: TextStyle(fontSize: 18)),
-                Text('No Telepon: ${data.noTelp}', style: TextStyle(fontSize: 18)),
-                Text('Email: ${data.email}', style: TextStyle(fontSize: 18)),
-                Text('Alamat: ${data.alamat}', style: TextStyle(fontSize: 18)),
+                DetailCard(
+                  text: 'Nama: ${data.nama}',
+                  icon: Icons.person,
+                  isBold: true,
+                ),
+                DetailCard(
+                  text: 'No Telepon: ${data.noTelp}',
+                  icon: Icons.phone,
+                ),
+                DetailCard(
+                  text: 'Email: ${data.email}',
+                  icon: Icons.email,
+                ),
+                DetailCard(
+                  text: 'Alamat: ${data.alamat}',
+                  icon: Icons.location_on,
+                ),
                 SizedBox(height: 20),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.to(() => EditTenagaKesehatanPage(tenagaKesehatanId: data.id));
-                      },
-                      child: Text('Edit'),
-                    ),
-                    SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final confirm = await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text('Hapus Tenaga Kesehatan'),
-                            content: Text('Apakah Anda yakin ingin menghapus data ini?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, false),
-                                child: Text('Batal'),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, true),
-                                child: Text('Hapus'),
-                              ),
-                            ],
-                          ),
-                        );
-                        if (confirm == true) {
-                          controller.deleteTenagaKesehatan(data.id, data.userId);
-                          Get.back();
-                        }
-                      },
-                      child: Text('Hapus'),
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                    ),
-                  ],
+                HapusUbah(
+                  text1: 'Hapus',
+                  text2: 'Edit',
+                  press1: () {
+                    controller.deleteTenagaKesehatan(data.id, data.userId);
+                    Get.back();
+                  },
+                  press2: () {
+                    Get.to(() => EditTenagaKesehatanPage(tenagaKesehatanId: data.id));
+                  },
                 ),
               ],
             ),
@@ -80,3 +68,4 @@ class DetailTenagaKesehatanPage extends StatelessWidget {
     );
   }
 }
+

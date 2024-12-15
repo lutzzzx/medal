@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medal/widgets/custom_text_form_field.dart';
+import 'package:medal/widgets/expanded_button.dart';
 import '../controllers/tenaga_kesehatan_controller.dart';
 import '../../../data/models/jadwal_kunjungan_model.dart';
 
@@ -42,9 +44,10 @@ class TambahJadwalKunjunganPage extends StatelessWidget {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
+              CustomTextFormField(
+                icon: Icon(Icons.person),
                 controller: _namaAhliKesehatanController,
-                decoration: InputDecoration(labelText: 'Nama Tenaga Kesehatan'),
+                labelText: 'Nama Tenaga Kesehatan',
                 onChanged: (value) async {
                   if (value.isNotEmpty) {
                     await controller.searchTenagaKesehatan(value);
@@ -52,6 +55,7 @@ class TambahJadwalKunjunganPage extends StatelessWidget {
                 },
                 validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
               ),
+
               Obx(() {
                 if (controller.filteredTenagaKesehatanList.isNotEmpty) {
                   return ListView.builder(
@@ -73,9 +77,11 @@ class TambahJadwalKunjunganPage extends StatelessWidget {
                   return SizedBox.shrink();
                 }
               }),
-              TextFormField(
+              CustomTextFormField(
+                icon: Icon(Icons.calendar_today), // Ikon untuk tanggal
                 controller: _tanggalController,
-                decoration: InputDecoration(labelText: 'Tanggal'),
+                labelText: 'Tanggal',
+                readOnly: true,
                 onTap: () async {
                   DateTime? pickedDate = await showDatePicker(
                     context: context,
@@ -84,35 +90,39 @@ class TambahJadwalKunjunganPage extends StatelessWidget {
                     lastDate: DateTime(2100),
                   );
                   if (pickedDate != null) {
-                    _tanggalController.text = "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+                    _tanggalController.text =
+                    "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
                   }
                 },
-                readOnly: true,
+                validator: (value) => value!.isEmpty ? 'Tanggal harus diisi' : null,
               ),
-              TextFormField(
+
+              CustomTextFormField(
+                icon: Icon(Icons.access_time), // Ikon untuk jam
                 controller: _jamController,
-                decoration: InputDecoration(labelText: 'Jam'),
+                labelText: 'Jam',
+                readOnly: true, // Hanya bisa dipilih via time picker
                 onTap: () async {
                   TimeOfDay? pickedTime = await showTimePicker(
                     context: context,
                     initialTime: TimeOfDay.now(),
                   );
                   if (pickedTime != null) {
-                    _jamController.text = "${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
+                    _jamController.text =
+                    "${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
                   }
                 },
-                readOnly: true,
+                validator: (value) => value!.isEmpty ? 'Jam harus diisi' : null,
               ),
-              TextFormField(
+
+              CustomTextFormField(
+                icon: Icon(Icons.note), // Ikon untuk keterangan
                 controller: _keteranganController,
-                decoration: InputDecoration(labelText: 'Keterangan'),
-                validator: (value) => value!.isEmpty ? 'Keterangan harus diisi' : null,
+                labelText: 'Keterangan',
               ),
+
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _tambahJadwal,
-                child: Text('Simpan'),
-              ),
+              ExpandedButton(text1: 'Simpan', press1: _tambahJadwal)
             ],
           ),
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medal/data/models/tenaga_kesehatan_model.dart';
+import 'package:medal/widgets/custom_text_form_field.dart';
 import '../controllers/tenaga_kesehatan_controller.dart';
 import '../../../data/models/jadwal_kunjungan_model.dart';
 
@@ -54,9 +55,10 @@ class EditJadwalKunjunganPage extends StatelessWidget {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
+              CustomTextFormField(
+                icon: Icon(Icons.person), // Tambahkan ikon
                 controller: _namaAhliKesehatanController,
-                decoration: InputDecoration(labelText: 'Nama Tenaga Kesehatan'),
+                labelText: 'Nama Tenaga Kesehatan',
                 onChanged: (value) async {
                   if (value.isNotEmpty) {
                     await controller.searchTenagaKesehatan(value);
@@ -85,9 +87,11 @@ class EditJadwalKunjunganPage extends StatelessWidget {
                   return SizedBox.shrink();
                 }
               }),
-              TextFormField(
+              CustomTextFormField(
+                icon: Icon(Icons.calendar_today), // Tambahkan ikon kalender
                 controller: _tanggalController,
-                decoration: InputDecoration(labelText: 'Tanggal'),
+                labelText: 'Tanggal',
+                readOnly: true,
                 onTap: () async {
                   DateTime? pickedDate = await showDatePicker(
                     context: context,
@@ -96,29 +100,33 @@ class EditJadwalKunjunganPage extends StatelessWidget {
                     lastDate: DateTime(2100),
                   );
                   if (pickedDate != null) {
-                    _tanggalController.text = "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+                    _tanggalController.text =
+                    "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
                   }
                 },
-                readOnly: true,
+                validator: (value) => value!.isEmpty ? 'Tangggal harus diisi' : null,
               ),
-              TextFormField(
+              CustomTextFormField(
+                icon: Icon(Icons.access_time), // Tambahkan ikon jam
                 controller: _jamController,
-                decoration: InputDecoration(labelText: 'Jam'),
+                labelText: 'Jam',
+                readOnly: true,
                 onTap: () async {
                   TimeOfDay? pickedTime = await showTimePicker(
                     context: context,
                     initialTime: TimeOfDay.now(),
                   );
                   if (pickedTime != null) {
-                    _jamController.text = "${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
+                    _jamController.text =
+                    "${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
                   }
                 },
-                readOnly: true,
+                validator: (value) => value!.isEmpty ? 'Jam harus diisi' : null,
               ),
-              TextFormField(
+              CustomTextFormField(
+                icon: Icon(Icons.note), // Tambahkan ikon keterangan
                 controller: _keteranganController,
-                decoration: InputDecoration(labelText: 'Keterangan'),
-                validator: (value) => value!.isEmpty ? 'Keterangan harus diisi' : null,
+                labelText: 'Keterangan',
               ),
               SizedBox(height: 20),
               ElevatedButton(
@@ -127,6 +135,7 @@ class EditJadwalKunjunganPage extends StatelessWidget {
               ),
             ],
           ),
+
         ),
       ),
     );
