@@ -32,7 +32,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     // Menambahkan listener untuk mendeteksi perubahan fokus
     _focusNode.addListener(() {
       setState(() {
-        _iconColor = _focusNode.hasFocus ? const Color(0xFF0077B6) : Colors.grey; // Ubah warna ikon
+        _iconColor = _focusNode.hasFocus
+            ? const Color(0xFF0077B6)
+            : Colors.grey; // Ubah warna ikon
       });
     });
   }
