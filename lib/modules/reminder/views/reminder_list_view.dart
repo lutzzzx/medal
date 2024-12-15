@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../controllers/reminder_controller.dart';
 import 'add_reminder_view.dart';
 import 'reminder_detail_view.dart';
+import 'package:medal/widgets/reminder_info_card.dart';
 
 class ReminderListView extends StatelessWidget {
   final ReminderController controller = Get.find();
@@ -27,17 +28,33 @@ class ReminderListView extends StatelessWidget {
           return Center(child: Text('Belum ada pengingat obat.'));
         }
 
+        // return ListView.builder(
+        //   itemCount: controller.reminders.length,
+        //   itemBuilder: (context, index) {
+        //     final reminder = controller.reminders[index];
+
+        //     return ListTile(
+        //       title: Text(reminder.medicineName),
+        //       subtitle: Text(
+        //         'Jam Minum: ${reminder.times.join(', ')}\n'
+        //             'Dosis: ${reminder.doses} ${reminder.medicineType}',
+        //       ),
+        //       onTap: () {
+        //         Get.to(ReminderDetailView(reminder: reminder));
+        //       },
+        //     );
+        //   },
+        // );
+
         return ListView.builder(
           itemCount: controller.reminders.length,
           itemBuilder: (context, index) {
             final reminder = controller.reminders[index];
-
-            return ListTile(
-              title: Text(reminder.medicineName),
-              subtitle: Text(
-                'Jam Minum: ${reminder.times.join(', ')}\n'
-                    'Dosis: ${reminder.doses} ${reminder.medicineType}',
-              ),
+            return ReminderInfoCard(
+              medicineName: reminder.medicineName,
+              times: reminder.times,
+              supply: reminder.supply,
+              medicineType: reminder.medicineType,
               onTap: () {
                 Get.to(ReminderDetailView(reminder: reminder));
               },
