@@ -60,15 +60,31 @@ class BodyFatCalculatorPage extends StatelessWidget {
               SizedBox(height: 10.0),
 
               // Pilihan Jenis Kelamin
-              DropdownButton<String>(
-                value: controller.gender.value,
-                items: [
-                  DropdownMenuItem(value: "Male", child: Text("Pria")),
-                  DropdownMenuItem(value: "Female", child: Text("Wanita")),
-                ],
-                onChanged: (value) {
-                  controller.gender.value = value!;
-                },
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: controller.gender.value,
+                    items: [
+                      DropdownMenuItem(value: "Male", child: Text("Pria")),
+                      DropdownMenuItem(value: "Female", child: Text("Wanita")),
+                    ],
+                    onChanged: (value) {
+                      controller.gender.value = value!;
+                    },
+                    icon: Icon(Icons.arrow_drop_down),
+                    iconSize: 24,
+                    dropdownColor: Colors.white,
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
               ),
               SizedBox(height: 20.0),
 
