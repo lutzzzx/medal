@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medal/widgets/custom_text_form_field.dart';
+import 'package:medal/widgets/detail_card.dart';
 import 'package:medal/widgets/expanded_button.dart';
 import '../controllers/calculator_controller.dart';
 
@@ -16,6 +17,7 @@ class BMICalculatorPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Kalkulator BMI'),
+        backgroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -25,7 +27,7 @@ class BMICalculatorPage extends StatelessWidget {
             Text(
               "BMI (Body Mass Index) adalah indikator kesehatan berdasarkan berat dan tinggi badan.",
               style: TextStyle(fontSize: 16.0),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.justify,
             ),
             SizedBox(height: 20.0),
             CustomTextFormField(
@@ -49,14 +51,19 @@ class BMICalculatorPage extends StatelessWidget {
                       double.tryParse(weightController.text) ?? 0.0;
                   controller.calculateBMI();
                 }),
-            SizedBox(height: 20.0),
+            SizedBox(height: 30.0),
             Obx(() {
-              return Text(
-                controller.bmiMessage.value,
-                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
+              final message = controller.bmiMessage.value;
+              if (message.isEmpty) {
+                return SizedBox.shrink();
+              }
+              return DetailCard(
+                text: message,
+                icon: Icons.info,
+                isBold: true,
               );
             }),
+
           ],
         ),
       ),

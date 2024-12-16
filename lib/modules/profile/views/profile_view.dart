@@ -17,6 +17,7 @@ class ProfileView extends GetView<ProfileController> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
+        backgroundColor: Colors.white,
         actions: [
           IconButton(
             icon: Icon(Icons.logout),

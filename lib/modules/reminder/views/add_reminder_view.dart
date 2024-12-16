@@ -54,7 +54,7 @@ class _AddReminderViewState extends State<AddReminderView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Tambah Pengingat Obat')),
+      appBar: AppBar(title: Text('Tambah Pengingat Obat'), backgroundColor: Colors.white,),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

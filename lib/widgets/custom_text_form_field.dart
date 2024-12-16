@@ -88,6 +88,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             color: widget.isEdit ? const Color(0xFF0077B6) : _iconColor,
           ),
           labelText: widget.labelText,
+          labelStyle: TextStyle(color: Colors.grey), // Warna default label
+          floatingLabelStyle: TextStyle(
+            color: widget.isEdit ? const Color(0xFF0077B6) : Colors.grey,
+          ), // Warna label saat floating
           filled: true,
           fillColor: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.white,
           border: OutlineInputBorder(
@@ -105,6 +109,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             borderSide: const BorderSide(color: Color(0xFF0077B6)),
           ),
         ),
+        dropdownColor: Colors.white, // Latar belakang dropdown
+
         validator: widget.validator,
       )
           : TextFormField(
@@ -116,9 +122,13 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         decoration: InputDecoration(
           prefixIcon: Icon(
             widget.icon.icon,
-            color: widget.isEdit ? const Color(0xFF0077B6) : _iconColor,
+            color: widget.isEdit ? const Color(0xFF03045E) : _iconColor,
           ),
           labelText: widget.labelText,
+          labelStyle: TextStyle(color: Colors.grey), // Warna default label
+          floatingLabelStyle: TextStyle(
+            color: widget.isEdit ? const Color(0xFF0077B6) : Colors.grey,
+          ), // Warna label saat floating
           filled: true,
           fillColor: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.white,
           border: OutlineInputBorder(

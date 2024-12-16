@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medal/widgets/custom_text_form_field.dart';
+import 'package:medal/widgets/detail_card.dart';
 import 'package:medal/widgets/expanded_button.dart';
 import '../controllers/calculator_controller.dart';
 
@@ -17,6 +18,7 @@ class WhrCalculatorPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Kalkulator WHR'),
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -52,13 +54,16 @@ class WhrCalculatorPage extends StatelessWidget {
 
                     controller.calculateWHR();
                   }),
+              SizedBox(height: 30),
               Obx(() {
-                return Text(
-                  controller.whrMessage.value.isEmpty
-                      ? 'Masukkan data lengkap untuk menghitung WHR.'
-                      : '${controller.whrMessage.value} (WHR: ${controller.whr.value.toStringAsFixed(2)})',
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
+                final message = controller.whrMessage.value;
+                if (message.isEmpty) {
+                  return SizedBox.shrink();
+                }
+                return DetailCard(
+                  text: '$message (WHR: ${controller.whr.value.toStringAsFixed(2)})',
+                  icon: Icons.accessibility,
+                  isBold: true,
                 );
               }),
             ],

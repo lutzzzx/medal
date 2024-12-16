@@ -53,7 +53,7 @@ class EditJadwalKunjunganPage extends StatelessWidget {
   Widget build(BuildContext context) {
     _loadData();
     return Scaffold(
-      appBar: AppBar(title: Text('Edit Jadwal Kunjungan')),
+      appBar: AppBar(title: Text('Edit Jadwal Kunjungan'), backgroundColor: Colors.white,),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

@@ -26,6 +26,7 @@ class TenagaKesehatanMainPage extends StatelessWidget {
             // Bagian Jadwal Kunjungan
 
             Obx(() {
+              SizedBox(height: 20);
               if (controller.jadwalKunjunganList.isEmpty) {
                 return Center(
                   child: Text('Belum ada jadwal kunjungan.'),
@@ -61,7 +62,7 @@ class TenagaKesehatanMainPage extends StatelessWidget {
                             ),
                             child: Icon(
                               Icons.calendar_today, // Ikon kunjungan
-                              color: const Color(0xFF0077B6),
+                              color: const Color(0xFF03045E),
                               size: 24,
                             ),
                           ),
@@ -153,7 +154,7 @@ class TenagaKesehatanMainPage extends StatelessWidget {
                             ),
                             child: Icon(
                               Icons.person,
-                              color: const Color(0xFF0077B6),
+                              color: const Color(0xFF03045E),
                               size: 24,
                             ),
                           ),
@@ -195,6 +196,7 @@ class TenagaKesehatanMainPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
+            backgroundColor: Colors.white,
             context: context,
             builder: (context) => Container(
               height: MediaQuery.of(context).size.height * 0.20, // Mengatur tinggi sheet
@@ -226,9 +228,10 @@ class TenagaKesehatanMainPage extends StatelessWidget {
             ),
           );
         },
+        backgroundColor: Color(0xFF03045E),
+        foregroundColor: Colors.white,
         child: Icon(Icons.add),
       ),
-
     );
   }
 }

@@ -66,6 +66,8 @@ class ReminderListView extends StatelessWidget {
         onPressed: () {
           Get.to(AddReminderView());
         },
+        backgroundColor: Color(0xFF03045E),
+        foregroundColor: Colors.white,
         child: Icon(Icons.add),
       ),
     );

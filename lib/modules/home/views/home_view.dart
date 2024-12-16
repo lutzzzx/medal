@@ -16,48 +16,62 @@ class HomeView extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Obx(() => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  controller.selectedTab.value = 0;
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: controller.selectedTab.value == 0
-                      ? Colors.blue
-                      : Colors.grey[200],
-                ),
-                child: Text(
-                  'Belum Diminum',
-                  style: TextStyle(
-                    color: controller.selectedTab.value == 0
-                        ? Colors.white
-                        : Colors.black,
+          Obx(() => Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0), // Menambahkan margin kiri dan kanan
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start, // Mengubah menjadi rata kiri
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    controller.selectedTab.value = 0;
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: controller.selectedTab.value == 0
+                        ? const Color(0xFF0077B6)
+                        : Colors.grey[200],
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    'Belum Diminum',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: controller.selectedTab.value == 0
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  controller.selectedTab.value = 1;
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: controller.selectedTab.value == 1
-                      ? Colors.blue
-                      : Colors.grey[200],
-                ),
-                child: Text(
-                  'Telah Diminum',
-                  style: TextStyle(
-                    color: controller.selectedTab.value == 1
-                        ? Colors.white
-                        : Colors.black,
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    controller.selectedTab.value = 1;
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: controller.selectedTab.value == 1
+                        ? const Color(0xFF0077B6)
+                        : Colors.grey[200],
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    'Telah Diminum',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: controller.selectedTab.value == 1
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )),
+          SizedBox(height: 10,),
           Expanded(
             child: Obx(() {
               if (controller.reminders.isEmpty) {

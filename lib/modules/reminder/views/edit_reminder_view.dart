@@ -89,16 +89,14 @@ class _EditReminderViewState extends State<EditReminderView> {
 
   void _deleteReminder(BuildContext context) async {
     await controller.deleteReminder(widget.reminder.id);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Pengingat berhasil dihapus!')),
-    );
-    Get.back(); // Kembali ke daftar pengingat
+    Get.snackbar('Berhasil', 'Pengingat berhasil dihapus!');
+    Get.back();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Pengingat Obat')),
+      appBar: AppBar(title: const Text('Edit Pengingat Obat'), backgroundColor: Colors.white,),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

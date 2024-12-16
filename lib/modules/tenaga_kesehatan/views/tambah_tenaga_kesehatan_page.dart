@@ -33,7 +33,7 @@ class TambahTenagaKesehatanPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Tambah Tenaga Kesehatan')),
+      appBar: AppBar(title: Text('Tambah Tenaga Kesehatan'), backgroundColor: Colors.white,),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

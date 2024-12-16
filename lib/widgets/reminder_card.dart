@@ -24,8 +24,8 @@ class ReminderCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: Colors.lightBlue[50],
-        borderRadius: BorderRadius.circular(12.0),
+        color: const Color(0xFFCAF0F8),
+        borderRadius: BorderRadius.circular(14.0),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -41,7 +41,7 @@ class ReminderCard extends StatelessWidget {
                 ),
                 child: Icon(
                   Icons.medication, // Replace icon
-                  color: Colors.blue[900],
+                  color: const Color(0xFF03045E),
                 ),
               ),
               const SizedBox(width: 12.0),
@@ -54,7 +54,7 @@ class ReminderCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue[900],
+                      color: const Color(0xFF03045E),
                     ),
                   ),
                   const SizedBox(height: 4.0),

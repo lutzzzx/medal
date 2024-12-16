@@ -24,7 +24,7 @@ class ReminderInfoCard extends StatelessWidget {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            color: const Color(0xFFE5F6FF), // Light blue background
+            color: const Color(0xFFCAF0F8), // Light blue background
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Padding(
@@ -69,7 +69,7 @@ class ReminderInfoCard extends StatelessWidget {
                     vertical: 8.0,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF00BCD4), // Turquoise accent
+                    color: const Color(0xFF00B4D8), // Turquoise accent
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Column(

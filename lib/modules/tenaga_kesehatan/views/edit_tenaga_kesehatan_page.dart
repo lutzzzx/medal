@@ -46,7 +46,7 @@ class EditTenagaKesehatanPage extends StatelessWidget {
   Widget build(BuildContext context) {
     _loadData();
     return Scaffold(
-      appBar: AppBar(title: Text('Edit Tenaga Kesehatan')),
+      appBar: AppBar(title: Text('Edit Tenaga Kesehatan'), backgroundColor: Colors.white,),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

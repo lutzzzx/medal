@@ -39,14 +39,15 @@ class CalculatorController extends GetxController {
   void calculateBMI() {
     if (height.value > 0 && weight.value > 0) {
       bmi.value = weight.value / ((height.value / 100) * (height.value / 100));
+
       if (bmi.value < 18.5) {
-        bmiMessage.value = "Underweight (Kekurangan berat badan)";
+        bmiMessage.value = "Underweight - BMI: ${bmi.value.toStringAsFixed(2)}";
       } else if (bmi.value >= 18.5 && bmi.value < 24.9) {
-        bmiMessage.value = "Normal (Berat badan ideal)";
+        bmiMessage.value = "Normal - BMI: ${bmi.value.toStringAsFixed(2)}";
       } else if (bmi.value >= 25 && bmi.value < 29.9) {
-        bmiMessage.value = "Overweight (Kelebihan berat badan)";
+        bmiMessage.value = "Overweight - BMI: ${bmi.value.toStringAsFixed(2)}";
       } else {
-        bmiMessage.value = "Obese (Obesitas)";
+        bmiMessage.value = "Obese - BMI: ${bmi.value.toStringAsFixed(2)}";
       }
     } else {
       bmiMessage.value = ""; // Tidak menampilkan pesan jika input belum lengkap
@@ -58,12 +59,12 @@ class CalculatorController extends GetxController {
       whr.value = waist.value / hip.value;
       if (gender.value == 'Male') {
         whrMessage.value = whr.value > 0.9
-            ? "Tinggi risiko kesehatan"
-            : "Risiko kesehatan rendah";
+            ? "Risiko tinggi"
+            : "Risiko rendah";
       } else {
         whrMessage.value = whr.value > 0.85
-            ? "Tinggi risiko kesehatan"
-            : "Risiko kesehatan rendah";
+            ? "Risiko tinggi"
+            : "Risiko rendah";
       }
     } else {
       whrMessage.value = ""; // Tidak menampilkan pesan jika input belum lengkap

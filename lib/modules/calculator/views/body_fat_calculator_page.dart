@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medal/widgets/custom_text_form_field.dart';
+import 'package:medal/widgets/detail_card.dart';
 import 'package:medal/widgets/expanded_button.dart';
 import '../controllers/calculator_controller.dart';
 
@@ -19,6 +20,7 @@ class BodyFatCalculatorPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Kalkulator Body Fat'),
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -79,16 +81,18 @@ class BodyFatCalculatorPage extends StatelessWidget {
 
                     controller.calculateBodyFat();
                   }),
-              SizedBox(height: 20.0),
+              SizedBox(height: 30.0),
 
               // Output Hasil Body Fat
               Obx(() {
-                return Text(
-                  controller.bodyFatMessage.value.isEmpty
-                      ? 'Masukkan data lengkap untuk menghitung Body Fat.'
-                      : controller.bodyFatMessage.value,
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
+                final message = controller.bodyFatMessage.value;
+                if (message.isEmpty) {
+                  return SizedBox.shrink(); // Tidak menampilkan apa pun jika kosong
+                }
+                return DetailCard(
+                  text: message,
+                  icon: Icons.fitness_center, // Sesuaikan ikon jika diperlukan
+                  isBold: true, // Karena sebelumnya menggunakan FontWeight.bold
                 );
               }),
             ],

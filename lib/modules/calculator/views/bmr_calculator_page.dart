@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medal/widgets/custom_text_form_field.dart';
+import 'package:medal/widgets/detail_card.dart';
 import 'package:medal/widgets/expanded_button.dart';
 import '../controllers/calculator_controller.dart';
 
@@ -19,6 +20,7 @@ class BMRCalculatorPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Kalkulator BMR'),
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -29,7 +31,7 @@ class BMRCalculatorPage extends StatelessWidget {
               Text(
                 "BMR (Basal Metabolic Rate) adalah jumlah kalori yang dibutuhkan tubuh untuk fungsi dasar dalam keadaan istirahat.",
                 style: TextStyle(fontSize: 16.0),
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.justify,
               ),
               SizedBox(height: 20.0),
 
@@ -81,14 +83,18 @@ class BMRCalculatorPage extends StatelessWidget {
                     // Jalankan perhitungan BMR
                     controller.calculateBMR();
                   }),
-              SizedBox(height: 20.0),
+              SizedBox(height: 30.0),
 
               // Output Hasil BMR
               Obx(() {
-                return Text(
-                  controller.bmrMessage.value,
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
+                final message = controller.bmrMessage.value;
+                if (message.isEmpty) {
+                  return SizedBox.shrink(); // Widget kosong jika tidak ada nilai
+                }
+                return DetailCard(
+                  text: message,
+                  icon: Icons.calculate, // Ikon contoh, sesuaikan jika diperlukan
+                  isBold: true, // Karena pada Text sebelumnya menggunakan FontWeight.bold
                 );
               }),
             ],
