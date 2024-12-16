@@ -10,6 +10,7 @@ class BodyFatCalculatorPage extends StatelessWidget {
   final TextEditingController usiaController = TextEditingController();
   final TextEditingController tinggiBadanController = TextEditingController();
   final TextEditingController beratBadanController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
 
   BodyFatCalculatorPage({super.key});
 
@@ -53,33 +54,16 @@ class BodyFatCalculatorPage extends StatelessWidget {
                 keyboardType: TextInputType.number,
               ),
 
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Colors.grey,
-                  ),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: Obx(() => DropdownButton<String>(
-                        isExpanded: true,
-                        value: controller.gender.value,
-                        items: [
-                          DropdownMenuItem(value: "Male", child: Text("Pria")),
-                          DropdownMenuItem(
-                              value: "Female", child: Text("Wanita")),
-                        ],
-                        onChanged: (value) {
-                          controller.gender.value = value!;
-                        },
-                        icon: Icon(Icons.arrow_drop_down),
-                        iconSize: 24,
-                        dropdownColor: Colors.white,
-                        alignment: Alignment.centerLeft,
-                      )),
-                ),
+              CustomTextFormField(
+                icon: Icon(Icons.transgender),
+                controller: genderController,
+                labelText: "Jenis Kelamin",
+                dropdownItems: ["Pria", "Wanita"],
+                onChanged: (value) {
+                  controller.gender.value = value == "Pria" ? "Male" : "Female";
+                },
               ),
+
               SizedBox(height: 20.0),
 
               // Tombol Hitung Body Fat

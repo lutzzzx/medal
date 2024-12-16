@@ -8,8 +8,9 @@ class CustomTextFormField extends StatefulWidget {
   final String? Function(String?)? validator;
   final bool readOnly;
   final VoidCallback? onTap;
-  final ValueChanged<String>? onChanged; // Tambahkan onChanged
-  final bool isEdit; // Tambahkan parameter isEdit
+  final ValueChanged<String>? onChanged;
+  final bool isEdit;
+  final List<String>? dropdownItems;
 
   const CustomTextFormField({
     super.key,
@@ -20,8 +21,9 @@ class CustomTextFormField extends StatefulWidget {
     this.validator,
     this.readOnly = false,
     this.onTap,
-    this.onChanged, // Parameter opsional
-    this.isEdit = false, // Parameter opsional dengan default false
+    this.onChanged,
+    this.isEdit = false,
+    this.dropdownItems,
   });
 
   @override
@@ -31,6 +33,7 @@ class CustomTextFormField extends StatefulWidget {
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
   late FocusNode _focusNode;
   Color _iconColor = Colors.grey;
+  String? _selectedValue;
 
   @override
   void initState() {
@@ -53,7 +56,48 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16.0),
-      child: TextFormField(
+      child: widget.dropdownItems != null
+          ? DropdownButtonFormField<String>(
+        value: _selectedValue,
+        items: widget.dropdownItems!
+            .map((item) => DropdownMenuItem<String>(
+          value: item,
+          child: Text(item),
+        ))
+            .toList(),
+        onChanged: (value) {
+          setState(() {
+            _selectedValue = value;
+            widget.controller.text = value ?? '';
+          });
+          if (widget.onChanged != null) {
+            widget.onChanged!(value ?? '');
+          }
+        },
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            widget.icon.icon,
+            color: widget.isEdit ? const Color(0xFF0077B6) : _iconColor,
+          ),
+          labelText: widget.labelText,
+          filled: true,
+          fillColor: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.0),
+            borderSide: BorderSide(color: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.0),
+            borderSide: BorderSide(color: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.0),
+            borderSide: const BorderSide(color: Color(0xFF0077B6)),
+          ),
+        ),
+        validator: widget.validator,
+      )
+          : TextFormField(
         controller: widget.controller,
         focusNode: _focusNode,
         readOnly: widget.readOnly,
@@ -62,11 +106,11 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         decoration: InputDecoration(
           prefixIcon: Icon(
             widget.icon.icon,
-            color: widget.isEdit ? const Color(0xFF0077B6) : _iconColor, // Ubah warna ikon
+            color: widget.isEdit ? const Color(0xFF0077B6) : _iconColor,
           ),
           labelText: widget.labelText,
-          filled: true, // Mengaktifkan pengisian latar belakang
-          fillColor: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.white, // Ubah warna latar belakang
+          filled: true,
+          fillColor: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.white,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),
             borderSide: BorderSide(color: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.grey),
