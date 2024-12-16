@@ -68,8 +68,15 @@ class _AddReminderViewState extends State<AddReminderView> {
                   icon: Icon(Icons.radio_button_unchecked),
                   labelText: 'Nama Obat',
                   keyboardType: TextInputType.text,
-                  validator: (value) =>
-                  value == null || value.isEmpty ? 'Wajib diisi' : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Nama harus diisi';
+                    }
+                    if (value.length > 50) {
+                      return 'Nama tidak boleh lebih dari 50 karakter';
+                    }
+                    return null;
+                  },
                 ),
                 CustomTextFormField(
                   controller: _dailyConsumptionController,
@@ -77,10 +84,18 @@ class _AddReminderViewState extends State<AddReminderView> {
                   labelText: 'Konsumsi Per Hari',
                   keyboardType: TextInputType.number,
                   onChanged: (_) => _generateTimes(),
-                  validator: (value) =>
-                  value == null || int.tryParse(value) == null
-                      ? 'Harus berupa angka'
-                      : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Wajib diisi';
+                    }
+                    if (int.tryParse(value) == null || int.parse(value) < 0) {
+                      return 'Harus berupa angka positif';
+                    }
+                    if (int.parse(value) > 20) {
+                      return 'Angka tidak boleh lebih dari 20';
+                    }
+                    return null;
+                  },
                 ),
                 ..._times.asMap().entries.map((entry) {
                   int index = entry.key;
@@ -116,10 +131,18 @@ class _AddReminderViewState extends State<AddReminderView> {
                         icon: Icon(Icons.monitor_heart),
                         labelText: 'Dosis',
                         keyboardType: TextInputType.number,
-                        validator: (value) =>
-                        value == null || int.tryParse(value) == null
-                            ? 'Harus berupa angka'
-                            : null,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Wajib diisi';
+                          }
+                          if (int.tryParse(value) == null || int.parse(value) < 0) {
+                            return 'Harus berupa angka positif';
+                          }
+                          if (int.parse(value) > 50) {
+                            return 'Angka tidak boleh lebih dari 50';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     SizedBox(width: 14,),
@@ -136,6 +159,8 @@ class _AddReminderViewState extends State<AddReminderView> {
                             _medicineType = value;
                           });
                         },
+                        validator: (value) =>
+                        value == null || value.isEmpty ? 'Wajib dipilih' : null,
                       ),
                     ),
                   ],
@@ -155,22 +180,38 @@ class _AddReminderViewState extends State<AddReminderView> {
                       _medicineUse = value;
                     });
                   },
+                  validator: (value) =>
+                  value == null || value.isEmpty ? 'Wajib dipilih' : null,
                 ),
                 CustomTextFormField(
                   controller: _supplyController,
                   icon: Icon(Icons.inventory_2),
                   labelText: 'Persediaan Obat',
                   keyboardType: TextInputType.number,
-                  validator: (value) =>
-                  value == null || int.tryParse(value) == null
-                      ? 'Harus berupa angka'
-                      : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Wajib diisi';
+                    }
+                    if (int.tryParse(value) == null || int.parse(value) < 0) {
+                      return 'Harus berupa angka positif';
+                    }
+                    if (int.parse(value) > 999999) {
+                      return 'Angka tidak boleh lebih dari 999999';
+                    }
+                    return null;
+                  },
                 ),
                 CustomTextFormField(
                   controller: _notesController,
                   icon: Icon(Icons.notes),
                   labelText: 'Keterangan',
                   keyboardType: TextInputType.text,
+                  validator: (value) {
+                    if (value != null && value.length > 255) {
+                      return 'Keterangan tidak boleh lebih dari 255 karakter';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(height: 20),
                 ExpandedButton(text1: "Tambah", press1: _addReminder),

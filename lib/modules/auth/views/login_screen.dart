@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medal/widgets/custom_text_form_field.dart';
 import '../controllers/auth_controller.dart';
 
 class LoginScreen extends StatelessWidget {

@@ -90,7 +90,6 @@ class _EditReminderViewState extends State<EditReminderView> {
   void _deleteReminder(BuildContext context) async {
     await controller.deleteReminder(widget.reminder.id);
     Get.snackbar('Berhasil', 'Pengingat berhasil dihapus!');
-    Get.back();
   }
 
   @override
@@ -110,8 +109,15 @@ class _EditReminderViewState extends State<EditReminderView> {
                   labelText: 'Nama Obat',
                   keyboardType: TextInputType.text,
                   isEdit: true,
-                  validator: (value) =>
-                  value == null || value.isEmpty ? 'Wajib diisi' : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Nama harus diisi';
+                    }
+                    if (value.length > 50) {
+                      return 'Nama tidak boleh lebih dari 50 karakter';
+                    }
+                    return null;
+                  },
                 ),
                 CustomTextFormField(
                   controller: _dailyConsumptionController,
@@ -125,8 +131,18 @@ class _EditReminderViewState extends State<EditReminderView> {
                       _generateTimes(dailyConsumption);
                     }
                   },
-                  validator: (value) =>
-                  value == null || int.tryParse(value) == null ? 'Harus berupa angka' : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Wajib diisi';
+                    }
+                    if (int.tryParse(value) == null || int.parse(value) < 0) {
+                      return 'Harus berupa angka positif';
+                    }
+                    if (int.parse(value) > 20) {
+                      return 'Angka tidak boleh lebih dari 20';
+                    }
+                    return null;
+                  },
                 ),
                 ListView.builder(
                   shrinkWrap: true,
@@ -164,8 +180,18 @@ class _EditReminderViewState extends State<EditReminderView> {
                         labelText: 'Dosis',
                         keyboardType: TextInputType.number,
                         isEdit: true,
-                        validator: (value) =>
-                        value == null || int.tryParse(value) == null ? 'Harus berupa angka' : null,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Wajib diisi';
+                          }
+                          if (int.tryParse(value) == null || int.parse(value) < 0) {
+                            return 'Harus berupa angka positif';
+                          }
+                          if (int.parse(value) > 100) {
+                            return 'Angka tidak boleh lebih dari 100';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     SizedBox(width: 14,),
@@ -206,8 +232,18 @@ class _EditReminderViewState extends State<EditReminderView> {
                   labelText: 'Persediaan Obat',
                   isEdit: true,
                   keyboardType: TextInputType.number,
-                  validator: (value) =>
-                  value == null || int.tryParse(value) == null ? 'Harus berupa angka' : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Wajib diisi';
+                    }
+                    if (int.tryParse(value) == null || int.parse(value) < 0) {
+                      return 'Harus berupa angka positif';
+                    }
+                    if (int.parse(value) > 999999) {
+                      return 'Angka tidak boleh lebih dari 999999';
+                    }
+                    return null;
+                  },
                 ),
                 CustomTextFormField(
                   controller: _notesController,
@@ -215,7 +251,12 @@ class _EditReminderViewState extends State<EditReminderView> {
                   labelText: 'Keterangan',
                   isEdit: true,
                   keyboardType: TextInputType.multiline,
-                  validator: (value) => null,
+                  validator: (value) {
+                    if (value != null && value.length > 255) {
+                      return 'Keterangan tidak boleh lebih dari 255 karakter';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
                 HapusUbah(

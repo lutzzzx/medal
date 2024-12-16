@@ -27,6 +27,7 @@ class TambahTenagaKesehatanPage extends StatelessWidget {
       );
       controller.addTenagaKesehatan(tenagaKesehatan);
       Get.back();
+      Get.snackbar('Berhasil', 'Tenaga kesehatan berhasil ditambahkan');
     }
   }
 
@@ -44,24 +45,54 @@ class TambahTenagaKesehatanPage extends StatelessWidget {
                 icon: Icon(Icons.person),
                 controller: _namaController,
                 labelText: 'Nama',
-                validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Nama harus diisi';
+                  }
+                  if (value.length > 50) {
+                    return 'Nama tidak boleh lebih dari 50 karakter';
+                  }
+                  return null;
+                },
               ),
               CustomTextFormField(
                 icon: Icon(Icons.phone),
                 controller: _noTelpController,
                 labelText: 'No Telepon',
                 keyboardType: TextInputType.phone,
+                validator: (value) {
+                  if (value != null && value.isNotEmpty) {
+                    if (!RegExp(r'^\+?[0-9]{10,15}$').hasMatch(value)) {
+                      return 'Masukkan nomor telepon yang valid (10-15 digit)';
+                    }
+                  }
+                  return null;
+                },
               ),
               CustomTextFormField(
                 icon: Icon(Icons.email),
                 controller: _emailController,
                 labelText: 'Email',
                 keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value != null && value.isNotEmpty) {
+                    if (!RegExp(r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value)) {
+                      return 'Masukkan alamat email yang valid';
+                    }
+                  }
+                  return null;
+                },
               ),
               CustomTextFormField(
                 icon: Icon(Icons.home),
                 controller: _alamatController,
                 labelText: 'Alamat',
+                validator: (value) {
+                  if (value != null && value.length > 200) {
+                    return 'Alamat tidak boleh lebih dari 200 karakter';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 20),
               ExpandedButton(text1: 'Simpan', press1: _tambahData)

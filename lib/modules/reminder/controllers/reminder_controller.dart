@@ -96,14 +96,10 @@ class ReminderController extends GetxController {
         );
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Pengingat berhasil ditambahkan')),
-      );
       Get.back();
+      Get.snackbar('Berhasil', 'Pengingat berhasil ditambahkan');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Terjadi kesalahan: $e')),
-      );
+      Get.snackbar('Gagal', 'Terjadi kesalahan $e');
     }
   }
 
@@ -165,15 +161,10 @@ class ReminderController extends GetxController {
         );
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Pengingat berhasil diperbarui')),
-      );
-
-      Get.close(1);
+      Get.back();
+      Get.snackbar('Berhasil', 'Pengingat berhasil diperbarui');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Terjadi kesalahan: $e')),
-      );
+      Get.snackbar('Gagal', 'Terjadi kesalahan $e');
     }
   }
 }

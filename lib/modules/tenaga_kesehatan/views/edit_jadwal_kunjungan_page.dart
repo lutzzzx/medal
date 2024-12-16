@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medal/data/models/tenaga_kesehatan_model.dart';
+import 'package:medal/modules/tenaga_kesehatan/views/edit_tenaga_kesehatan_page.dart';
 import 'package:medal/widgets/custom_text_form_field.dart';
 import 'package:medal/widgets/expanded_button.dart';
 import 'package:medal/widgets/hapus_ubah.dart';
@@ -45,6 +46,7 @@ class EditJadwalKunjunganPage extends StatelessWidget {
       );
       controller.updateJadwalKunjungan(updatedJadwalKunjungan);
       Get.back();
+      Get.snackbar('Berhasil', 'Jadwal kunjungan berhasil diperbarui');
     }
   }
 
@@ -74,7 +76,15 @@ class EditJadwalKunjunganPage extends StatelessWidget {
                           await controller.searchTenagaKesehatan(value);
                         }
                       },
-                      validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Nama harus diisi';
+                        }
+                        if (value.length > 50) {
+                          return 'Nama tidak boleh lebih dari 50 karakter';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   if (_selectedTenagaKesehatanId != null) // Show button only if a healthcare worker is selected
@@ -89,7 +99,7 @@ class EditJadwalKunjunganPage extends StatelessWidget {
                         child: Icon(Icons.arrow_forward, color: const Color(0xFF03045E), size: 30.0),
                       ),
                       onPressed: () {
-                        Get.to(() => DetailTenagaKesehatanPage(tenagaKesehatanId: _selectedTenagaKesehatanId!));
+                        Get.to(() => EditTenagaKesehatanPage(tenagaKesehatanId: _selectedTenagaKesehatanId!));
                       },
                       tooltip: 'Lihat Detail Tenaga Kesehatan',
                     ),
@@ -159,6 +169,12 @@ class EditJadwalKunjunganPage extends StatelessWidget {
                 controller: _keteranganController,
                 labelText: 'Keterangan',
                 isEdit: true,
+                validator: (value) {
+                  if (value != null && value.length > 255) {
+                    return 'Keterangan tidak boleh lebih dari 255 karakter';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 20),
               HapusUbah(

@@ -31,6 +31,7 @@ class TambahJadwalKunjunganPage extends StatelessWidget {
       );
       controller.addJadwalKunjungan(jadwalKunjungan);
       Get.back();
+      Get.snackbar('Berhasil', 'Jadwal kunjungan berhasil ditambahkan');
     }
   }
 
@@ -53,7 +54,15 @@ class TambahJadwalKunjunganPage extends StatelessWidget {
                     await controller.searchTenagaKesehatan(value);
                   }
                 },
-                validator: (value) => value!.isEmpty ? 'Nama harus diisi' : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Nama harus diisi';
+                  }
+                  if (value.length > 50) {
+                    return 'Nama tidak boleh lebih dari 50 karakter';
+                  }
+                  return null;
+                },
               ),
 
               Obx(() {
@@ -119,6 +128,12 @@ class TambahJadwalKunjunganPage extends StatelessWidget {
                 icon: Icon(Icons.note), // Ikon untuk keterangan
                 controller: _keteranganController,
                 labelText: 'Keterangan',
+                validator: (value) {
+                  if (value != null && value.length > 255) {
+                    return 'Keterangan tidak boleh lebih dari 255 karakter';
+                  }
+                  return null;
+                },
               ),
 
               SizedBox(height: 20),
