@@ -182,7 +182,7 @@ class EditJadwalKunjunganPage extends StatelessWidget {
                 text2: 'Update',
                 press1: () {
                   controller.deleteJadwalKunjungan(jadwalKunjunganId, FirebaseAuth.instance.currentUser !.uid);
-                  Get.back();
+                  Get.close(1);
                   Get.snackbar('Sukses', 'Data berhasil dihapus');
                 },
                 press2: _editJadwal,

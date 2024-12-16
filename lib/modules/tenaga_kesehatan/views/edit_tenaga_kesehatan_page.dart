@@ -117,7 +117,7 @@ class EditTenagaKesehatanPage extends StatelessWidget {
                 text2: 'Update',
                 press1: () {
                   controller.deleteTenagaKesehatan(tenagaKesehatanId, FirebaseAuth.instance.currentUser !.uid);
-                  Get.back();
+                  Get.close(1);
                   Get.snackbar('Sukses', 'Data berhasil dihapus');
                 },
                 press2: _updateData,
