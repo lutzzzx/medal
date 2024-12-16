@@ -6,9 +6,9 @@ import 'package:medal/modules/layout/controllers/layout_controller.dart';
 class LayoutView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    FirebaseAuth.instance.authStateChanges().listen((User ? user) {
       if (user == null) {
-        print('User logged out, navigating to login page.');
+        print('User  logged out, navigating to login page.');
         Get.offAllNamed('/login');
       }
     });
@@ -19,16 +19,19 @@ class LayoutView extends StatelessWidget {
       final index = layoutController.selectedIndex.value;
       if (index < 0 || index >= layoutController.pages.length) {
         return Scaffold(
+          backgroundColor: Colors.white,
           body: Center(child: Text('Invalid page index')),
         );
       }
 
-      final user = FirebaseAuth.instance.currentUser;
+      final user = FirebaseAuth.instance.currentUser ;
 
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(layoutController.pageTitles[index]),
           automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
           actions: [
             IconButton(
               icon: user != null && user.photoURL != null
@@ -71,6 +74,7 @@ class LayoutView extends StatelessWidget {
           currentIndex: index,
           selectedItemColor: Colors.blue,
           unselectedItemColor: Colors.grey,
+          backgroundColor: Colors.white,
           onTap: layoutController.onItemTapped,
         ),
       );

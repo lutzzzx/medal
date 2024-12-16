@@ -11,6 +11,7 @@ class CustomTextFormField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final bool isEdit;
   final List<String>? dropdownItems;
+  final String? initialDropdownValue; // Properti baru untuk nilai awal dropdown
 
   const CustomTextFormField({
     super.key,
@@ -24,6 +25,7 @@ class CustomTextFormField extends StatefulWidget {
     this.onChanged,
     this.isEdit = false,
     this.dropdownItems,
+    this.initialDropdownValue,
   });
 
   @override
@@ -44,6 +46,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         _iconColor = _focusNode.hasFocus ? const Color(0xFF0077B6) : Colors.grey;
       });
     });
+
+    // Set nilai awal dropdown jika disediakan
+    _selectedValue = widget.initialDropdownValue;
+    if (widget.initialDropdownValue != null) {
+      widget.controller.text = widget.initialDropdownValue!;
+    }
   }
 
   @override
@@ -84,11 +92,13 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           fillColor: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.white,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),
-            borderSide: BorderSide(color: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.grey),
+            borderSide: BorderSide(
+                color: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.grey),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),
-            borderSide: BorderSide(color: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.grey),
+            borderSide: BorderSide(
+                color: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.grey),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),
@@ -113,11 +123,13 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           fillColor: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.white,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),
-            borderSide: BorderSide(color: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.grey),
+            borderSide: BorderSide(
+                color: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.grey),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),
-            borderSide: BorderSide(color: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.grey),
+            borderSide: BorderSide(
+                color: widget.isEdit ? const Color(0xFFCAF0F8) : Colors.grey),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),
