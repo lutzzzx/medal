@@ -33,6 +33,7 @@ class TenagaKesehatanController extends GetxController {
   void deleteTenagaKesehatan(String id, String userId) async {
     await _tenagaKesehatanRepo.deleteTenagaKesehatan(id);
     fetchTenagaKesehatan(userId);
+    fetchJadwalKunjungan(userId);
   }
 
   void addJadwalKunjungan(JadwalKunjungan jadwalKunjungan) async {

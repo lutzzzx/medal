@@ -33,22 +33,33 @@ class EditJadwalKunjunganPage extends StatelessWidget {
 
   void _editJadwal() {
     if (_formKey.currentState!.validate()) {
+      final jadwalLama = controller.jadwalKunjunganList.firstWhere((j) => j.id == jadwalKunjunganId);
+
+      String? selectedNamaAhliKesehatan = _selectedTenagaKesehatanId == null
+          ? null
+          : controller.tenagaKesehatanList
+          .firstWhere((tk) => tk.id == _selectedTenagaKesehatanId)
+          .nama;
+      bool isNamaSama = _namaAhliKesehatanController.text == selectedNamaAhliKesehatan;
+
       final updatedJadwalKunjungan = JadwalKunjungan(
         id: jadwalKunjunganId,
-        namaAhliKesehatan: _selectedTenagaKesehatanId == null
-            ? _namaAhliKesehatanController.text
-            : controller.tenagaKesehatanList.firstWhere((tk) => tk.id == _selectedTenagaKesehatanId).nama,
+        namaAhliKesehatan: isNamaSama
+            ? selectedNamaAhliKesehatan!
+            : _namaAhliKesehatanController.text,
         tanggal: _tanggalController.text,
         jam: _jamController.text,
         keterangan: _keteranganController.text,
-        userId: controller.jadwalKunjunganList.firstWhere((j) => j.id == jadwalKunjunganId).userId,
-        tenagaKesehatanId: _selectedTenagaKesehatanId,
+        userId: jadwalLama.userId,
+        tenagaKesehatanId: isNamaSama ? _selectedTenagaKesehatanId : null,
       );
+
       controller.updateJadwalKunjungan(updatedJadwalKunjungan);
       Get.back();
       Get.snackbar('Berhasil', 'Jadwal kunjungan berhasil diperbarui');
     }
   }
+
 
   @override
   @override
@@ -70,7 +81,6 @@ class EditJadwalKunjunganPage extends StatelessWidget {
                       controller: _namaAhliKesehatanController,
                       labelText: 'Nama Tenaga Kesehatan',
                       isEdit: true,
-                      readOnly: _selectedTenagaKesehatanId != null,
                       onChanged: (value) async {
                         if (value.isNotEmpty) {
                           await controller.searchTenagaKesehatan(value);

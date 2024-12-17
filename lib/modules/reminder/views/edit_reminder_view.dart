@@ -88,10 +88,15 @@ class _EditReminderViewState extends State<EditReminderView> {
   }
 
   void _deleteReminder(BuildContext context) async {
-    await controller.deleteReminder(widget.reminder.id);
-    Get.close(1);
-    Get.snackbar('Berhasil', 'Pengingat berhasil dihapus!');
+    try {
+      await controller.deleteReminder(widget.reminder.id);
+      Get.close(1);
+      Get.snackbar('Berhasil', 'Pengingat berhasil dihapus!');
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal menghapus pengingat: $e');
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -18,22 +18,35 @@ class TambahJadwalKunjunganPage extends StatelessWidget {
   void _tambahJadwal() {
     if (_formKey.currentState!.validate()) {
       final userId = FirebaseAuth.instance.currentUser?.uid;
+
+      // Ambil nama berdasarkan tenaga kesehatan yang dipilih (jika ada)
+      String? selectedNamaAhliKesehatan = _selectedTenagaKesehatanId == null
+          ? null
+          : controller.tenagaKesehatanList
+          .firstWhere((tk) => tk.id == _selectedTenagaKesehatanId)
+          .nama;
+
+      // Cek apakah nama di inputan sama dengan nama tenaga kesehatan yang dipilih
+      bool isNamaSama = _namaAhliKesehatanController.text == selectedNamaAhliKesehatan;
+
       final jadwalKunjungan = JadwalKunjungan(
         id: '',
-        namaAhliKesehatan: _selectedTenagaKesehatanId == null
-            ? _namaAhliKesehatanController.text
-            : controller.tenagaKesehatanList.firstWhere((tk) => tk.id == _selectedTenagaKesehatanId).nama,
+        namaAhliKesehatan: isNamaSama
+            ? selectedNamaAhliKesehatan!
+            : _namaAhliKesehatanController.text,
         tanggal: _tanggalController.text,
         jam: _jamController.text,
         keterangan: _keteranganController.text,
         userId: userId!,
-        tenagaKesehatanId: _selectedTenagaKesehatanId,
+        tenagaKesehatanId: isNamaSama ? _selectedTenagaKesehatanId : null,
       );
+
       controller.addJadwalKunjungan(jadwalKunjungan);
       Get.back();
       Get.snackbar('Berhasil', 'Jadwal kunjungan berhasil ditambahkan');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
